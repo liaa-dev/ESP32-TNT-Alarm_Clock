@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+extern void action_change_to_main_screen(lv_event_t * e);
+extern void action_change_to_set_alarm_screen(lv_event_t * e);
 
 
 #ifdef __cplusplus
