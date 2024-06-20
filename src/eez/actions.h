@@ -7,8 +7,22 @@
 extern "C" {
 #endif
 
-extern void action_change_to_main_screen(lv_event_t * e);
-extern void action_change_to_set_alarm_screen(lv_event_t * e);
+extern void action_go_to_main_screen(lv_event_t * e);
+extern void action_go_to_set_alarm_screen(lv_event_t * e);
+extern void action_go_to_timer_screen(lv_event_t * e);
+extern void action_go_to_stopwatch_screen(lv_event_t * e);
+extern void action_go_to_settings_screen(lv_event_t * e);
+extern void action_go_back(lv_event_t * e);
+extern void action_alarm_plus_long_pressed(lv_event_t * e);
+extern void action_alarm_plus_pressed(lv_event_t * e);
+extern void action_alarm_minus_long_pressed(lv_event_t * e);
+extern void action_alarm_minus_pressed(lv_event_t * e);
+extern void action_alarm_set_pressed(lv_event_t * e);
+extern void action_alarm_reset_pressed(lv_event_t * e);
+extern void action_timer_set_pressed(lv_event_t * e);
+extern void action_timer_reset_pressed(lv_event_t * e);
+extern void action_stopwatch_start_pressed(lv_event_t * e);
+extern void action_stopwatch_reset_pressed(lv_event_t * e);
 
 
 #ifdef __cplusplus

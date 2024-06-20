@@ -8,12 +8,6 @@
 #include "actions.h"
 #include "vars.h"
 
-
-
-
-
-
-
 #if defined(EEZ_FOR_LVGL)
 
 void ui_init() {
@@ -43,6 +37,10 @@ static const void *getLvglImageByName(const char *name) {
         }
     }
     return 0;
+}
+
+int16_t get_current_screen() {
+    return currentScreen;
 }
 
 void loadScreen(enum ScreensEnum screenId) {

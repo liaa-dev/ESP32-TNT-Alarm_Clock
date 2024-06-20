@@ -22,6 +22,7 @@ extern "C" {
 void ui_init();
 void ui_tick();
 
+int16_t get_current_screen();
 #if !defined(EEZ_FOR_LVGL)
 void loadScreen(enum ScreensEnum screenId);
 #endif
