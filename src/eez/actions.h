@@ -23,6 +23,10 @@ extern void action_timer_set_pressed(lv_event_t * e);
 extern void action_timer_reset_pressed(lv_event_t * e);
 extern void action_stopwatch_start_pressed(lv_event_t * e);
 extern void action_stopwatch_reset_pressed(lv_event_t * e);
+extern void action_settings_time_selected(lv_event_t * e);
+extern void action_settings_wi_fi_selected(lv_event_t * e);
+extern void action_settings_bluetooth_selected(lv_event_t * e);
+extern void action_settings_other_selected(lv_event_t * e);
 
 
 #ifdef __cplusplus

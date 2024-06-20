@@ -13,6 +13,8 @@ extern const lv_font_t ui_font_smallpixel7_32;
 extern const lv_font_t ui_font_smallpixel7_48;
 extern const lv_font_t ui_font_smallpixel_148;
 extern const lv_font_t ui_font_smallpixel7_20;
+extern const lv_font_t ui_font_bm_army_20;
+extern const lv_font_t ui_font_bm_army_32;
 
 
 #ifdef __cplusplus

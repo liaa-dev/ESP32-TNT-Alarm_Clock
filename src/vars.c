@@ -11,6 +11,10 @@ const char *var_timer_time = "00:00";
 const char *var_stopwatch_time = "00:00:00:00";
 bool var_stopwatch_hide_pause_btn = true;
 bool var_stopwatch_hide_start_btn = false;
+bool var_settings_hide_time = true;
+bool var_settings_hide_wi_fi = true;
+bool var_settings_hide_bluetooth = true;
+bool var_settings_hide_other = true;
 
 extern const char *get_var_digital_time() {
     return var_digital_time;
@@ -77,4 +81,28 @@ extern bool get_var_stopwatch_hide_start_btn() {
 }
 extern void set_var_stopwatch_hide_start_btn(bool value) {
     var_stopwatch_hide_start_btn = value;
+}
+extern bool get_var_settings_hide_time() {
+    return var_settings_hide_time;
+}
+extern void set_var_settings_hide_time(bool value) {
+    var_settings_hide_time = value;
+}
+extern bool get_var_settings_hide_wi_fi() {
+    return var_settings_hide_wi_fi;
+}
+extern void set_var_settings_hide_wi_fi(bool value) {
+    var_settings_hide_wi_fi = value;
+}
+extern bool get_var_settings_hide_bluetooth() {
+    return var_settings_hide_bluetooth;
+}
+extern void set_var_settings_hide_bluetooth(bool value) {
+    var_settings_hide_bluetooth = value;
+}
+extern bool get_var_settings_hide_other() {
+    return var_settings_hide_other;
+}
+extern void set_var_settings_hide_other(bool value) {
+    var_settings_hide_other = value;
 }

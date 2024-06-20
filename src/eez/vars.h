@@ -25,7 +25,11 @@ enum FlowGlobalVariables {
     FLOW_GLOBAL_VARIABLE_TIMER_TIME = 7,
     FLOW_GLOBAL_VARIABLE_STOPWATCH_TIME = 8,
     FLOW_GLOBAL_VARIABLE_STOPWATCH_HIDE_PAUSE_BTN = 9,
-    FLOW_GLOBAL_VARIABLE_STOPWATCH_HIDE_START_BTN = 10
+    FLOW_GLOBAL_VARIABLE_STOPWATCH_HIDE_START_BTN = 10,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_TIME = 11,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_WI_FI = 12,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_BLUETOOTH = 13,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_OTHER = 14
 };
 
 // Native global variables
@@ -52,6 +56,14 @@ extern bool get_var_stopwatch_hide_pause_btn();
 extern void set_var_stopwatch_hide_pause_btn(bool value);
 extern bool get_var_stopwatch_hide_start_btn();
 extern void set_var_stopwatch_hide_start_btn(bool value);
+extern bool get_var_settings_hide_time();
+extern void set_var_settings_hide_time(bool value);
+extern bool get_var_settings_hide_wi_fi();
+extern void set_var_settings_hide_wi_fi(bool value);
+extern bool get_var_settings_hide_bluetooth();
+extern void set_var_settings_hide_bluetooth(bool value);
+extern bool get_var_settings_hide_other();
+extern void set_var_settings_hide_other(bool value);
 
 
 #ifdef __cplusplus
