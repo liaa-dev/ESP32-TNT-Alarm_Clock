@@ -3,7 +3,7 @@
 #include <eez/vars.h>
 #include <lvgl/lvgl.h>
 
-void hideAllSelectableSettings();
+void hideSettings();
 
 extern void action_go_to_main_screen(lv_event_t * e) {
     loadScreen(SCREEN_ID_MAIN);
@@ -22,11 +22,15 @@ extern void action_go_to_stopwatch_screen(lv_event_t * e) {
 
 extern void action_go_to_settings_screen(lv_event_t * e) {
     loadScreen(SCREEN_ID_SET_SETTINGS);
-
 }
 
 extern void action_go_back(lv_event_t * e) {
-    loadScreen(get_current_screen() - 1);
+    if(get_current_screen() == SCREEN_ID_SET_SETTINGS) {
+        hideSettings();
+        set_var_settings_title("Settings");
+        set_var_settings_hide_selection(false);
+        
+    }else loadScreen(get_current_screen() - 1);
 }
 
 extern void action_alarm_plus_long_pressed(lv_event_t * e) {
@@ -62,23 +66,44 @@ extern void action_stopwatch_reset_pressed(lv_event_t * e) {
 }
 
 extern void action_settings_time_selected(lv_event_t * e) {
-    hideAllSelectableSettings();
+    hideSettings();
+    set_var_settings_title("Time");
     set_var_settings_hide_time(false);
 }
 extern void action_settings_wi_fi_selected(lv_event_t * e) {
-    hideAllSelectableSettings();
+    hideSettings();
+    set_var_settings_title("WiFi");
     set_var_settings_hide_wi_fi(false);
 }
 extern void action_settings_bluetooth_selected(lv_event_t * e) {
-    hideAllSelectableSettings();
+    hideSettings();
+    set_var_settings_title("Bluetooth");
     set_var_settings_hide_bluetooth(false);
 }
 extern void action_settings_other_selected(lv_event_t * e) {
-    hideAllSelectableSettings();
+    hideSettings();
+    set_var_settings_title("Other");
     set_var_settings_hide_other(false);
 }
 
-void hideAllSelectableSettings() {
+extern void action_settings_bt_pair_pressed(lv_event_t * e) {
+
+}
+extern void action_settings_bt_connect_pressed(lv_event_t * e) {
+
+}
+extern void action_settings_bt_disconnect_pressed(lv_event_t * e) {
+
+}
+extern void action_settings_other_recalibrate_pressed(lv_event_t * e) {
+
+}
+extern void action_settings_other_reset_pressed(lv_event_t * e) {
+
+}
+
+void hideSettings() {
+    set_var_settings_hide_selection(true);
     set_var_settings_hide_time(true);
     set_var_settings_hide_wi_fi(true);
     set_var_settings_hide_bluetooth(true);

@@ -27,6 +27,11 @@ extern void action_settings_time_selected(lv_event_t * e);
 extern void action_settings_wi_fi_selected(lv_event_t * e);
 extern void action_settings_bluetooth_selected(lv_event_t * e);
 extern void action_settings_other_selected(lv_event_t * e);
+extern void action_settings_bt_pair_pressed(lv_event_t * e);
+extern void action_settings_bt_connect_pressed(lv_event_t * e);
+extern void action_settings_bt_disconnect_pressed(lv_event_t * e);
+extern void action_settings_other_recalibrate_pressed(lv_event_t * e);
+extern void action_settings_other_reset_pressed(lv_event_t * e);
 
 
 #ifdef __cplusplus

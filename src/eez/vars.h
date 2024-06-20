@@ -26,10 +26,19 @@ enum FlowGlobalVariables {
     FLOW_GLOBAL_VARIABLE_STOPWATCH_TIME = 8,
     FLOW_GLOBAL_VARIABLE_STOPWATCH_HIDE_PAUSE_BTN = 9,
     FLOW_GLOBAL_VARIABLE_STOPWATCH_HIDE_START_BTN = 10,
-    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_TIME = 11,
-    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_WI_FI = 12,
-    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_BLUETOOTH = 13,
-    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_OTHER = 14
+    FLOW_GLOBAL_VARIABLE_SETTINGS_TITLE = 11,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_TIME = 12,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_WI_FI = 13,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_BLUETOOTH = 14,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_OTHER = 15,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_HIDE_SELECTION = 16,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_BT_HIDE_DISCONNECT_BTN = 17,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_BT_HIDE_CONNECT_BTN = 18,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_TIME_AUTO_SET_CHECKED = 19,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_TIME_CHANGED_TIME = 20,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_TIME_MONTH_SELECTED = 21,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_TIME_DAY_SELECTED = 22,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_TIME_YEAR_SELECTED = 23
 };
 
 // Native global variables
@@ -56,6 +65,8 @@ extern bool get_var_stopwatch_hide_pause_btn();
 extern void set_var_stopwatch_hide_pause_btn(bool value);
 extern bool get_var_stopwatch_hide_start_btn();
 extern void set_var_stopwatch_hide_start_btn(bool value);
+extern const char *get_var_settings_title();
+extern void set_var_settings_title(const char *value);
 extern bool get_var_settings_hide_time();
 extern void set_var_settings_hide_time(bool value);
 extern bool get_var_settings_hide_wi_fi();
@@ -64,6 +75,22 @@ extern bool get_var_settings_hide_bluetooth();
 extern void set_var_settings_hide_bluetooth(bool value);
 extern bool get_var_settings_hide_other();
 extern void set_var_settings_hide_other(bool value);
+extern bool get_var_settings_hide_selection();
+extern void set_var_settings_hide_selection(bool value);
+extern bool get_var_settings_bt_hide_disconnect_btn();
+extern void set_var_settings_bt_hide_disconnect_btn(bool value);
+extern bool get_var_settings_bt_hide_connect_btn();
+extern void set_var_settings_bt_hide_connect_btn(bool value);
+extern bool get_var_settings_time_auto_set_checked();
+extern void set_var_settings_time_auto_set_checked(bool value);
+extern const char *get_var_settings_time_changed_time();
+extern void set_var_settings_time_changed_time(const char *value);
+extern int32_t get_var_settings_time_month_selected();
+extern void set_var_settings_time_month_selected(int32_t value);
+extern int32_t get_var_settings_time_day_selected();
+extern void set_var_settings_time_day_selected(int32_t value);
+extern int32_t get_var_settings_time_year_selected();
+extern void set_var_settings_time_year_selected(int32_t value);
 
 
 #ifdef __cplusplus
