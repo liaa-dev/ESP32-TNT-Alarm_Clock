@@ -4,6 +4,7 @@
 #include <lvgl.h>
 #include <eez/screens.h>
 #include <eez/ui.h>
+#include <WiFi.h>
 
 TFT_eSPI tft = TFT_eSPI();
 
@@ -65,6 +66,11 @@ void setup() {
   #if LV_USE_LOG != 0
     lv_log_register_print_cb(lvgl_debug_print); // register print function for debugging
   #endif
+
+  Serial.println("Initializing WiFi...");
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  delay(100);
 
   ui_init();
 
