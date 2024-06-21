@@ -12,7 +12,7 @@ void apply_style_style_smallpixel7_32(lv_obj_t *obj) {
 };
 void apply_style_style_smallpixel7_48(lv_obj_t *obj) {
     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(obj, &ui_font_smallpixel7_48, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(obj, &ui_font_smallpixel7_num_48, LV_PART_MAIN | LV_STATE_DEFAULT);
 };
 void apply_style_style_smallpixel7_64(lv_obj_t *obj) {
     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);

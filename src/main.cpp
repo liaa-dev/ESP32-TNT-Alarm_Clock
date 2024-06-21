@@ -5,6 +5,8 @@
 #include <eez/screens.h>
 #include <eez/ui.h>
 #include <WiFi.h>
+#include <SD.h>
+#include <main.hpp>
 
 TFT_eSPI tft = TFT_eSPI();
 
@@ -72,6 +74,14 @@ void setup() {
   WiFi.disconnect();
   delay(100);
 
+  Serial.println("Initializing SD card...");
+  if (!SD.begin(SD_CS)) {
+    Serial.println(F("SD Card failed, or not present! Please press RESET to try again!"));
+  }else {
+    Serial.println("SD card initialized!");
+    lv_fs_fatfs_init();
+  }
+
   ui_init();
 
   handleLVGL();
@@ -79,6 +89,37 @@ void setup() {
 
 void loop() {
   handleLVGL();
+}
+
+lv_obj_t * wifi_table;
+void createwifitable() {
+  if(wifi_table != NULL) lv_obj_del(wifi_table);
+
+  wifi_table = lv_table_create(lv_scr_act());
+  int pixel_size = 30;
+  //lv_table_set_column_width(wifi_table, 0, 300);
+  lv_obj_set_pos(wifi_table, 90, 109);
+  lv_obj_set_size(wifi_table, 300, 200);
+  lv_obj_set_style_text_font(wifi_table, &lv_font_montserrat_20, 0);
+
+  lv_table_set_cell_value(wifi_table, 0, 0, "Nr.");
+  lv_table_set_cell_value(wifi_table, 0, 1, "SSID");
+  lv_table_set_cell_value(wifi_table, 0, 2, "Sig.");
+  lv_table_set_cell_value(wifi_table, 0, 3, "Auth.");
+
+  lv_table_set_column_width(wifi_table, 0, 80);
+  lv_table_set_column_width(wifi_table, 1, 120);
+  lv_table_set_column_width(wifi_table, 2, 80);
+  lv_table_set_column_width(wifi_table, 3, 100);
+
+  int foundNetworks = WiFi.scanNetworks();
+  for(int i = 0; i < foundNetworks; i++) {
+      lv_table_set_cell_value(wifi_table, i, 0, String(i + 1).c_str());
+      lv_table_set_cell_value(wifi_table, i, 1, WiFi.SSID(i).c_str());
+      lv_table_set_cell_value(wifi_table, i, 2, String(WiFi.RSSI(i)).c_str());
+      lv_table_set_cell_value(wifi_table, i, 3, WiFi.encryptionType(i) == WIFI_AUTH_OPEN ? "Open" : "WPA/WPA2");
+      delay(10);
+  }
 }
 
 void handleLVGL() {

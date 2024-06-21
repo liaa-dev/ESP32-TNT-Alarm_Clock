@@ -3,11 +3,15 @@
 const char *var_digital_time = "14:09";
 const char *var_digital_date = "Wednesday, May 12";
 const char *var_digital_temperature = "30°C";
+const char *var_running_action = "Action";
+const char *var_running_action_time = "None";
 const char *var_status_bar_text = "This is a placeholder!";
+int32_t var_status_bar_value = 0;
 const char *var_alarm_time = "06:30";
 const char *var_alarm_reason = "This is a placeholder!";
 int32_t var_alarm_selected_reason = 0;
 const char *var_timer_time = "00:00";
+int32_t var_timer_value = 0;
 const char *var_stopwatch_time = "";
 bool var_stopwatch_hide_pause_btn = true;
 bool var_stopwatch_hide_start_btn = false;
@@ -19,6 +23,7 @@ bool var_settings_hide_other = true;
 bool var_settings_hide_selection = false;
 bool var_settings_bt_hide_disconnect_btn = true;
 bool var_settings_bt_hide_connect_btn = false;
+const char *var_settings_bt_connected_device_name = "";
 bool var_settings_time_auto_set_checked = true;
 const char *var_settings_time_changed_time = "";
 int32_t var_settings_time_month_selected = 0;
@@ -45,10 +50,31 @@ extern const char *get_var_digital_temperature() {
 extern void set_var_digital_temperature(const char *value) {
     var_digital_temperature = value;
 }
+extern const char *get_var_running_action() {
+    return var_running_action;
+}
+extern void set_var_running_action(const char *value) {
+    var_running_action = value;
+}
+extern const char *get_var_running_action_time() {
+    return var_running_action_time;
+}
+extern void set_var_running_action_time(const char *value) {
+    var_running_action_time = value;
+}
+
 
 extern const char *get_var_status_bar_text() {
     return var_status_bar_text;
 }
+
+extern int32_t get_var_status_bar_value() {
+    return var_status_bar_value;
+}
+extern void set_var_status_bar_value(int32_t value) {
+    var_status_bar_value = value;
+}
+
 extern void set_var_status_bar_text(const char *value) {
     var_status_bar_text = value;
 }
@@ -78,6 +104,13 @@ extern const char *get_var_timer_time() {
 extern void set_var_timer_time(const char *value) {
     var_timer_time = value;
 }
+extern int32_t get_var_timer_value() {
+    return var_timer_value;
+}
+extern void set_var_timer_value(int32_t value) {
+    var_timer_value = value;
+}
+
 
 extern void set_var_stopwatch_time(const char *value) {
     var_stopwatch_time = value;
@@ -145,6 +178,12 @@ extern bool get_var_settings_bt_hide_connect_btn() {
 }
 extern void set_var_settings_bt_hide_connect_btn(bool value) {
     var_settings_bt_hide_connect_btn = value;
+}
+extern const char *get_var_settings_bt_connected_device_name() {
+    return var_settings_bt_connected_device_name;
+}
+extern void set_var_settings_bt_connected_device_name(const char *value) {
+    var_settings_bt_connected_device_name = value;
 }
 extern bool get_var_settings_time_auto_set_checked() {
     return var_settings_time_auto_set_checked;

@@ -2,9 +2,9 @@
 #include <eez/ui.h>
 #include <eez/vars.h>
 #include <lvgl/lvgl.h>
+#include <main.hpp>
 
 void hideSettings();
-void wifi();
 
 extern void action_go_to_main_screen(lv_event_t * e) {
     loadScreen(SCREEN_ID_MAIN);
@@ -78,7 +78,7 @@ extern void action_settings_wi_fi_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_title("WiFi");
     set_var_settings_hide_wi_fi(false);
-    wifi();
+    createwifitable();
 }
 extern void action_settings_bluetooth_selected(lv_event_t * e) {
     hideSettings();
@@ -113,35 +113,4 @@ void hideSettings() {
     set_var_settings_hide_wi_fi(true);
     set_var_settings_hide_bluetooth(true);
     set_var_settings_hide_other(true);
-}
-
-/* TODO: ADD THIS LATER ON TO SCREENS.C */
-lv_obj_t * wifi_table;
-void wifi() {
-    if(wifi_table != NULL) lv_obj_del(wifi_table);
-    wifi_table = lv_table_create(lv_scr_act());
-    int pixel_size = 30;
-    //lv_table_set_column_width(wifi_table, 0, 300);
-    lv_obj_set_pos(wifi_table, 90, 109);
-    lv_obj_set_size(wifi_table, 300, 200);
-    lv_obj_set_style_text_font(wifi_table, &lv_font_montserrat_20, 0);
-
-    lv_table_set_cell_value(wifi_table, 0, 0, "Nr.");
-    lv_table_set_cell_value(wifi_table, 0, 1, "SSID");
-    lv_table_set_cell_value(wifi_table, 0, 2, "Sig.");
-    lv_table_set_cell_value(wifi_table, 0, 3, "Auth.");
-
-    lv_table_set_column_width(wifi_table, 0, 80);
-    lv_table_set_column_width(wifi_table, 1, 120);
-    lv_table_set_column_width(wifi_table, 2, 80);
-    lv_table_set_column_width(wifi_table, 3, 100);
-
-//int foundNetworks = WiFi.scanNetworks();
-    /*for(int i = 0; i < foundNetworks; i++) {
-        lv_table_set_cell_value(wifi_table, i, 0, String(i + 1));
-        lv_table_set_cell_value(wifi_table, i, 1, WiFi.SSID(i));
-        lv_table_set_cell_value(wifi_table, i, 2, WiFi.RSSI(i));
-        lv_table_set_cell_value(wifi_table, i, 3, WiFi.encryptionType(i) == WIFI_AUTH_OPEN ? "Open" : "WPA/WPA2");
-        delay(10);
-    }*/
 }

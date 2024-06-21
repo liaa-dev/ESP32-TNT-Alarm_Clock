@@ -14,13 +14,6 @@ extern const lv_img_dsc_t img_partly_cloudy_day;
 extern const lv_img_dsc_t img_chronometer_32;
 extern const lv_img_dsc_t img_arrow_right_24;
 extern const lv_img_dsc_t img_arrow_left_24;
-extern const lv_img_dsc_t img_drop_down;
-extern const lv_img_dsc_t img_redstone_block_23;
-extern const lv_img_dsc_t img_clock_32;
-extern const lv_img_dsc_t img_clock_24;
-extern const lv_img_dsc_t img_wifi_24;
-extern const lv_img_dsc_t img_bluetooth_24;
-extern const lv_img_dsc_t img_touch_24;
 
 #ifndef EXT_IMG_DESC_T
 #define EXT_IMG_DESC_T
@@ -30,7 +23,7 @@ typedef struct _ext_img_desc_t {
 } ext_img_desc_t;
 #endif
 
-extern const ext_img_desc_t images[14];
+extern const ext_img_desc_t images[7];
 
 
 #ifdef __cplusplus
