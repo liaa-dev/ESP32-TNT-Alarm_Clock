@@ -7,6 +7,7 @@
 #include "images.h"
 #include "actions.h"
 #include "vars.h"
+#include "fonts.h"
 
 
 

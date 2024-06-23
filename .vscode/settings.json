@@ -2,6 +2,7 @@
     "files.associations": {
         "wifi.h": "c",
         "lvgl.h": "c",
-        "screens.h": "c"
+        "screens.h": "c",
+        "fonts.h": "c"
     }
 }

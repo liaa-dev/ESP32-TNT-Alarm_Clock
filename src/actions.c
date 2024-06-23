@@ -2,6 +2,7 @@
 #include <eez/ui.h>
 #include <eez/vars.h>
 #include <lvgl.h>
+#include <main.hpp>
 
 void hideSettings();
 
@@ -73,10 +74,12 @@ extern void action_settings_time_selected(lv_event_t * e) {
     set_var_settings_title("Time");
     set_var_settings_hide_time(false);
 }
+
 extern void action_settings_wi_fi_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_title("WiFi");
     set_var_settings_hide_wi_fi(false);
+    create_wi_fi_table();
 }
 extern void action_settings_bluetooth_selected(lv_event_t * e) {
     hideSettings();
@@ -106,6 +109,7 @@ extern void action_settings_other_reset_pressed(lv_event_t * e) {
 }
 
 void hideSettings() {
+    delete_wi_fi_table();
     set_var_settings_hide_selection(true);
     set_var_settings_hide_time(true);
     set_var_settings_hide_wi_fi(true);
