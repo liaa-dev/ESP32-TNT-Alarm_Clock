@@ -7,10 +7,10 @@
 extern "C" {
 #endif
 
-extern const lv_font_t ui_font_smallpixel7_num_48;
-extern const lv_font_t ui_font_smallpixel7_148;
-extern const lv_font_t ui_font_smallpixel7_128;
 extern const lv_font_t ui_font_smallpixel7_32;
+extern const lv_font_t ui_font_smallpixel7_num_48;
+extern const lv_font_t ui_font_smallpixel7_128;
+extern const lv_font_t ui_font_smallpixel7_num_148;
 extern const lv_font_t ui_font_bm_army_20;
 extern const lv_font_t ui_font_bm_army_32;
 

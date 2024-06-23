@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Size: 148 px
  * Bpp: 1
- * Opts: --user-data-dir=C:\Users\David\AppData\Roaming\eezstudio --app-path=C:\Users\David\AppData\Local\Programs\eezstudio\resources\app.asar --no-sandbox --no-zygote --node-integration-in-worker --lang=en-US --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --time-ticks-at-unix-epoch=-1718872563173651 --launch-time-ticks=91844670013 --mojo-platform-channel-handle=2496 --field-trial-handle=1664,i,12830591551701799424,5375431272022853112,262144 --enable-features=kWebSQLAccess --disable-features=SpareRendererForSitePerProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version /prefetch:1
+ * Opts: --user-data-dir=C:\Users\David\AppData\Roaming\eezstudio --app-path=C:\Users\David\AppData\Local\Programs\eezstudio\resources\app.asar --no-sandbox --no-zygote --node-integration-in-worker --lang=en-US --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --time-ticks-at-unix-epoch=-1718872562167558 --launch-time-ticks=269951734632 --mojo-platform-channel-handle=2608 --field-trial-handle=1664,i,17150010135977961705,416252648875899123,262144 --enable-features=kWebSQLAccess --disable-features=SpareRendererForSitePerProcess,WinDelaySpellcheckServiceInit,WinRetrieveSuggestionsOnlyOnDemand --variations-seed-version /prefetch:1
  ******************************************************************************/
 
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
@@ -10,11 +10,11 @@
 #include "lvgl/lvgl.h"
 #endif
 
-#ifndef UI_FONT_SMALLPIXEL7_148
-#define UI_FONT_SMALLPIXEL7_148 1
+#ifndef UI_FONT_SMALLPIXEL7_NUM_148
+#define UI_FONT_SMALLPIXEL7_NUM_148 1
 #endif
 
-#if UI_FONT_SMALLPIXEL7_148
+#if UI_FONT_SMALLPIXEL7_NUM_148
 
 /*-----------------
  *    BITMAPS
@@ -800,9 +800,9 @@ static lv_font_fmt_txt_dsc_t font_dsc = {
 
 /*Initialize a public general font descriptor*/
 #if LVGL_VERSION_MAJOR >= 8
-const lv_font_t ui_font_smallpixel7_148 = {
+const lv_font_t ui_font_smallpixel7_num_148 = {
 #else
-lv_font_t ui_font_smallpixel7_148 = {
+lv_font_t ui_font_smallpixel7_num_148 = {
 #endif
     .get_glyph_dsc = lv_font_get_glyph_dsc_fmt_txt,    /*Function pointer to get glyph's data*/
     .get_glyph_bitmap = lv_font_get_bitmap_fmt_txt,    /*Function pointer to get glyph's bitmap*/
@@ -822,5 +822,5 @@ lv_font_t ui_font_smallpixel7_148 = {
 
 
 
-#endif /*#if UI_FONT_SMALLPIXEL7_148*/
+#endif /*#if UI_FONT_SMALLPIXEL7_NUM_148*/
 

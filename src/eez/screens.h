@@ -15,6 +15,7 @@ typedef struct _objects_t {
     lv_obj_t *set_settings;
     lv_obj_t *action;
     lv_obj_t *alarm;
+    lv_obj_t *alarm_time_input;
     lv_obj_t *auto_set;
     lv_obj_t *change_date;
     lv_obj_t *change_time;
@@ -64,11 +65,10 @@ typedef struct _objects_t {
     lv_obj_t *setting__reset;
     lv_obj_t *setting__time;
     lv_obj_t *setting__wi_fi;
+    lv_obj_t *setting_time_input;
     lv_obj_t *spacer;
     lv_obj_t *status_bar;
-    lv_obj_t *time_input;
     lv_obj_t *time_input_1;
-    lv_obj_t *time_input_2;
     lv_obj_t *title;
     lv_obj_t *title_1;
     lv_obj_t *title_2;

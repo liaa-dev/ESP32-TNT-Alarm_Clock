@@ -15,16 +15,13 @@ lv_disp_t *disp;
 static lv_disp_draw_buf_t disp_buf;
 lv_indev_t *indev;
 
-uint16_t lv_lastTick = 0;  // Used to track the tick timer
-
 void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p);
 void my_touchpad_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 void lvgl_debug_print(const char * buf);
 void handleLVGL();
-static uint32_t lvgl_tick(void);
 
 void setup() {
-  pinMode(TFT_BL, OUTPUT); // steuerbar über analogWrite(TFT_BL, 0-255);
+  pinMode(TFT_BL, OUTPUT); // controlable with analogWrite(TFT_BL, 0-255);
 
   Serial.begin(115200);
   Serial.println("Starting...");
@@ -72,9 +69,6 @@ void setup() {
     Serial.println("Touchscreen input device created!");
   }
 
-  lv_lastTick = millis();
-  //lv_tick_inc(millis());
-
   #if LV_USE_LOG
     lv_log_register_print_cb(lvgl_debug_print);
   #endif
@@ -92,6 +86,7 @@ void setup() {
   lv_fs_fatfs_init();
 
   ui_init();
+
   handleLVGL();
 }
 
@@ -100,14 +95,11 @@ void loop() {
 }
 
 void handleLVGL() {
-  //lv_tick_inc(millis() - lv_lastTick); // LVGL needs a system tick to know the elapsed time for animations and other tasks.
-  lv_lastTick = millis();
-
   ui_tick();
     
   lv_refr_now(NULL); // Tell LVGL to refresh the screen (Increases FPS to 30, Drops CPU usage to 33%)
   lv_task_handler(); // Call the LVGL task handler
-  delay(5);
+  delay(0);
 }
 
 // Implement and register a function which can copy the rendered image to an area of your display:
