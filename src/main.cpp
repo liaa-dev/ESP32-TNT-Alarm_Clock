@@ -2,25 +2,26 @@
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include <lvgl.h>
-#include <eez/screens.h>
-#include <eez/ui.h>
-#include <WiFi.h>
 #include <SD.h>
-#include <main.hpp>
+#include <eez/ui.h>
+#include <AudioTools.h>
+#include <BluetoothA2DP.h>
+#include <WiFi.h>
 
-TFT_eSPI tft = TFT_eSPI();
+TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 
-#define DRAW_BUF_SIZE (TFT_HOR_RES * TFT_VER_RES / 10 * (LV_COLOR_DEPTH / 8))
-uint32_t draw_buf[DRAW_BUF_SIZE / 4];
+static lv_color_t buf[TFT_HOR_RES * TFT_VER_RES / 10];
+lv_disp_t *disp;
+static lv_disp_draw_buf_t disp_buf;
+lv_indev_t *indev;
 
-lv_indev_t * indev;    // Touchscreen input device for LVGL
-uint32_t lv_lastTick = 0;  // Used to track the tick timer
+uint16_t lv_lastTick = 0;  // Used to track the tick timer
 
-void my_disp_flush(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map);
-void my_touchpad_read(lv_indev_t *indev, lv_indev_data_t *data);
-void lvgl_debug_print(lv_log_level_t level, const char * buf);
+void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p);
+void my_touchpad_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
+void lvgl_debug_print(const char * buf);
 void handleLVGL();
-static uint32_t lvgl_tick();
+static uint32_t lvgl_tick(void);
 
 void setup() {
   pinMode(TFT_BL, OUTPUT); // steuerbar über analogWrite(TFT_BL, 0-255);
@@ -40,22 +41,31 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
   tft.setRotation(3);
 
-  uint16_t calData[5] = { 259, 3639, 231, 3513, 1 };
+  uint16_t calData[5] = { 278, 3616, 296, 3477, 1 };
   tft.setTouch(calData);
 
   Serial.println("Initializing LVGL...");
   lv_init();
-  lv_display_t * disp;
+  lv_disp_draw_buf_init(&disp_buf, buf, NULL, TFT_HOR_RES * TFT_VER_RES / 10);
 
-  // Init own display
-  disp = lv_display_create(TFT_HOR_RES, TFT_VER_RES);
-  lv_display_set_flush_cb(disp, my_disp_flush);
-  lv_display_set_buffers(disp, draw_buf, NULL, sizeof(draw_buf), LV_DISPLAY_RENDER_MODE_PARTIAL);
+  static lv_disp_drv_t disp_drv;
+  lv_disp_drv_init(&disp_drv);
+  disp_drv.hor_res = TFT_HOR_RES;
+  disp_drv.ver_res = TFT_VER_RES;
+  disp_drv.flush_cb = my_disp_flush;
+  disp_drv.draw_buf = &disp_buf;
+  disp = lv_disp_drv_register(&disp_drv);
+
+  if(!disp) {
+    Serial.println("Failed to create display!");
+  }
 
   Serial.println("Initializing touchscreen input device XPT2046...");
-  indev = lv_indev_create();
-  lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);  
-  lv_indev_set_read_cb(indev, my_touchpad_read);
+  static lv_indev_drv_t indev_drv;
+  lv_indev_drv_init(&indev_drv);
+  indev_drv.type = LV_INDEV_TYPE_POINTER;
+  indev_drv.read_cb = my_touchpad_read;
+  indev = lv_indev_drv_register(&indev_drv);
   if(!indev) {
     Serial.println("Failed to create input device");
   } else {
@@ -63,27 +73,25 @@ void setup() {
   }
 
   lv_lastTick = millis();
-  lv_tick_set_cb(lvgl_tick); // Set the tick function for LVGL
+  //lv_tick_inc(millis());
 
-  #if LV_USE_LOG != 0
-    lv_log_register_print_cb(lvgl_debug_print); // register print function for debugging
+  #if LV_USE_LOG
+    lv_log_register_print_cb(lvgl_debug_print);
   #endif
 
-  Serial.println("Initializing WiFi...");
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
-  delay(100);
+  Serial.println("LVGL initialized!");
 
   Serial.println("Initializing SD card...");
   if (!SD.begin(SD_CS)) {
     Serial.println(F("SD Card failed, or not present! Please press RESET to try again!"));
-  }else {
-    Serial.println("SD card initialized!");
-    lv_fs_fatfs_init();
+    return;
   }
 
-  ui_init();
+  Serial.println("SD card initialized!");
 
+  lv_fs_fatfs_init();
+
+  ui_init();
   handleLVGL();
 }
 
@@ -91,39 +99,8 @@ void loop() {
   handleLVGL();
 }
 
-lv_obj_t * wifi_table;
-void createwifitable() {
-  if(wifi_table != NULL) lv_obj_del(wifi_table);
-
-  wifi_table = lv_table_create(lv_scr_act());
-  int pixel_size = 30;
-  //lv_table_set_column_width(wifi_table, 0, 300);
-  lv_obj_set_pos(wifi_table, 90, 109);
-  lv_obj_set_size(wifi_table, 300, 200);
-  lv_obj_set_style_text_font(wifi_table, &lv_font_montserrat_20, 0);
-
-  lv_table_set_cell_value(wifi_table, 0, 0, "Nr.");
-  lv_table_set_cell_value(wifi_table, 0, 1, "SSID");
-  lv_table_set_cell_value(wifi_table, 0, 2, "Sig.");
-  lv_table_set_cell_value(wifi_table, 0, 3, "Auth.");
-
-  lv_table_set_column_width(wifi_table, 0, 80);
-  lv_table_set_column_width(wifi_table, 1, 120);
-  lv_table_set_column_width(wifi_table, 2, 80);
-  lv_table_set_column_width(wifi_table, 3, 100);
-
-  int foundNetworks = WiFi.scanNetworks();
-  for(int i = 0; i < foundNetworks; i++) {
-      lv_table_set_cell_value(wifi_table, i, 0, String(i + 1).c_str());
-      lv_table_set_cell_value(wifi_table, i, 1, WiFi.SSID(i).c_str());
-      lv_table_set_cell_value(wifi_table, i, 2, String(WiFi.RSSI(i)).c_str());
-      lv_table_set_cell_value(wifi_table, i, 3, WiFi.encryptionType(i) == WIFI_AUTH_OPEN ? "Open" : "WPA/WPA2");
-      delay(10);
-  }
-}
-
 void handleLVGL() {
-  lv_tick_inc(millis() - lv_lastTick); // LVGL needs a system tick to know the elapsed time for animations and other tasks.
+  //lv_tick_inc(millis() - lv_lastTick); // LVGL needs a system tick to know the elapsed time for animations and other tasks.
   lv_lastTick = millis();
 
   ui_tick();
@@ -134,41 +111,36 @@ void handleLVGL() {
 }
 
 // Implement and register a function which can copy the rendered image to an area of your display:
-void my_disp_flush(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map) {
+void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
   uint32_t w = lv_area_get_width(area);
   uint32_t h = lv_area_get_height(area);
 
   tft.startWrite();
   tft.setAddrWindow(area->x1, area->y1, w, h);      // Set window area to pour pixels into
-  tft.pushColors( (uint16_t *) px_map, w*h, true);  // Push Color Informations into area
+  tft.pushColors( (uint16_t *) color_p, w*h, true);  // Push Color Informations into area
   tft.endWrite();
 
   lv_disp_flush_ready(disp);                        // Indicate you are ready with the flushing
 }
 
 // Implement and register a function which can read an input device. E.g. for a touchpad:
-void my_touchpad_read(lv_indev_t *indev, lv_indev_data_t *data) { // Read the touchscreen
+void my_touchpad_read(lv_indev_drv_t *drv, lv_indev_data_t *data) { // Read the touchscreen
   uint16_t x, y;
 
   if (tft.getTouch(&x, &y)) {
     data->point.x = x;
     data->point.y = y;
-    data->state = LV_INDEV_STATE_PRESSED;
+    data->state = LV_INDEV_STATE_PR;
     Serial.printf("Touchpad pressed at x: %d, y: %d\n", x, y);
   } else {
-    data->state = LV_INDEV_STATE_RELEASED;
+    data->state = LV_INDEV_STATE_REL;
   }
-}
-
-static uint32_t lvgl_tick() {
-  return millis();
 }
 
 #if LV_USE_LOG
 // user function, that is called from LVGL
 // Serial debugging 
-void lvgl_debug_print(lv_log_level_t level, const char * buf) {
-  LV_UNUSED(level);
+void lvgl_debug_print(const char * buf) {
   Serial.printf(buf);
   Serial.flush();
 }

@@ -1,7 +1,7 @@
 #ifndef EEZ_LVGL_UI_GUI_H
 #define EEZ_LVGL_UI_GUI_H
 
-#include <lvgl/lvgl.h>
+#include <lvgl.h>
 
 
 
@@ -22,7 +22,8 @@ extern "C" {
 void ui_init();
 void ui_tick();
 
-int16_t get_current_screen();
+uint16_t getCurrentScreen();
+
 #if !defined(EEZ_FOR_LVGL)
 void loadScreen(enum ScreensEnum screenId);
 #endif

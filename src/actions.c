@@ -1,8 +1,7 @@
 #include <eez/actions.h>
 #include <eez/ui.h>
 #include <eez/vars.h>
-#include <lvgl/lvgl.h>
-#include <main.hpp>
+#include <lvgl.h>
 
 void hideSettings();
 
@@ -29,12 +28,12 @@ extern void action_go_to_settings_screen(lv_event_t * e) {
 }
 
 extern void action_go_back(lv_event_t * e) {
-    if(get_current_screen() == SCREEN_ID_SET_SETTINGS) {
+    if(getCurrentScreen() == SCREEN_ID_SET_SETTINGS) {
         hideSettings();
         set_var_settings_title("Settings");
         set_var_settings_hide_selection(false);
 
-    }else loadScreen(get_current_screen() - 1);
+    }else loadScreen(getCurrentScreen() - 1);
 }
 
 extern void action_alarm_plus_long_pressed(lv_event_t * e) {
@@ -78,7 +77,6 @@ extern void action_settings_wi_fi_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_title("WiFi");
     set_var_settings_hide_wi_fi(false);
-    createwifitable();
 }
 extern void action_settings_bluetooth_selected(lv_event_t * e) {
     hideSettings();

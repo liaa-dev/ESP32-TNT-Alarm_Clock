@@ -1,7 +1,7 @@
 #ifndef EEZ_LVGL_UI_SCREENS_H
 #define EEZ_LVGL_UI_SCREENS_H
 
-#include <lvgl/lvgl.h>
+#include <lvgl.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,7 +42,6 @@ typedef struct _objects_t {
     lv_obj_t *obj1;
     lv_obj_t *obj10;
     lv_obj_t *obj11;
-    lv_obj_t *obj12;
     lv_obj_t *obj2;
     lv_obj_t *obj3;
     lv_obj_t *obj4;
@@ -56,11 +55,9 @@ typedef struct _objects_t {
     lv_obj_t *select_setting;
     lv_obj_t *selected_setting__bluetooth;
     lv_obj_t *selected_setting__other;
-    lv_obj_t *selected_setting__other_1;
     lv_obj_t *selected_setting__time;
     lv_obj_t *setting__bluetooth;
     lv_obj_t *setting__connect;
-    lv_obj_t *setting__disconnect;
     lv_obj_t *setting__other;
     lv_obj_t *setting__pair;
     lv_obj_t *setting__recalibrate_touch;

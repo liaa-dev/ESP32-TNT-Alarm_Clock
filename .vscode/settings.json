@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "wifi.h": "c"
+        "wifi.h": "c",
+        "lvgl.h": "c",
+        "screens.h": "c"
     }
 }
