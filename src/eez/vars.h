@@ -71,8 +71,6 @@ extern const char *get_var_alarm_reason();
 extern void set_var_alarm_reason(const char *value);
 extern int32_t get_var_alarm_selected_reason();
 extern void set_var_alarm_selected_reason(int32_t value);
-extern int32_t get_var_alarm_selected_repeats();
-extern void set_var_alarm_selected_repeats(int32_t value);
 extern const char *get_var_timer_time();
 extern void set_var_timer_time(const char *value);
 extern int32_t get_var_timer_value();
@@ -115,6 +113,8 @@ extern int32_t get_var_settings_music_alarm_volume();
 extern void set_var_settings_music_alarm_volume(int32_t value);
 extern int32_t get_var_settings_music_auxin_volume();
 extern void set_var_settings_music_auxin_volume(int32_t value);
+extern int32_t get_var_alarm_selected_repeats();
+extern void set_var_alarm_selected_repeats(int32_t value);
 
 
 #ifdef __cplusplus

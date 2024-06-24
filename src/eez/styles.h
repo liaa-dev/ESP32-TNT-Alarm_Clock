@@ -10,6 +10,8 @@ extern "C" {
 extern void apply_style_style_smallpixel7_32(lv_obj_t *obj);
 extern void apply_style_style_smallpixel7_48(lv_obj_t *obj);
 extern void apply_style_style_container(lv_obj_t *obj);
+extern void apply_style_style_reset_btn(lv_obj_t *obj);
+extern void apply_style_style_set_btn(lv_obj_t *obj);
 
 
 #ifdef __cplusplus

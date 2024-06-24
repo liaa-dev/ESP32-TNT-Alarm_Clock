@@ -550,6 +550,13 @@ void create_screen_main() {
                 }
             }
         }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 273, 195);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text(obj, "Messagebox die sagt\n jo aux mode is an und prefer \nmode ist gechecked also alarm gehen \nvor, und dann wenn aux \nplayed (nehmen wir an) dann \ngehen wir beim audio amplifier \nauf den mute pin setzen den \nauf high dann spielen wir den alarm und dann switchen wir wieder (GEILLL) nur wenn alarm over aux an ist aber! sonst wirds einfach mischmasch! :D");
+            lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+        }
     }
 }
 
@@ -768,7 +775,7 @@ void create_screen_set_alarm() {
             lv_obj_set_size(obj, 100, 50);
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
             lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
+            apply_style_style_set_btn(obj);
             {
                 lv_obj_t *parent_obj = obj;
                 {
@@ -787,7 +794,7 @@ void create_screen_set_alarm() {
             lv_obj_set_size(obj, 100, 50);
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
             lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-            lv_obj_set_style_bg_color(obj, lv_color_hex(0xffff2626), LV_PART_MAIN | LV_STATE_DEFAULT);
+            apply_style_style_reset_btn(obj);
             {
                 lv_obj_t *parent_obj = obj;
                 {
@@ -932,7 +939,7 @@ void create_screen_set_timer() {
             lv_obj_set_size(obj, 100, 50);
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
             lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
+            apply_style_style_set_btn(obj);
             {
                 lv_obj_t *parent_obj = obj;
                 {
@@ -950,7 +957,7 @@ void create_screen_set_timer() {
             lv_obj_set_size(obj, 100, 50);
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
             lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-            lv_obj_set_style_bg_color(obj, lv_color_hex(0xffff2626), LV_PART_MAIN | LV_STATE_DEFAULT);
+            apply_style_style_reset_btn(obj);
             {
                 lv_obj_t *parent_obj = obj;
                 {
@@ -1097,7 +1104,7 @@ void create_screen_set_stopwatch() {
             lv_obj_set_size(obj, 100, 50);
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
             lv_obj_clear_flag(obj, LV_OBJ_FLAG_PRESS_LOCK|LV_OBJ_FLAG_SCROLLABLE);
-            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
+            apply_style_style_set_btn(obj);
             {
                 lv_obj_t *parent_obj = obj;
                 {
@@ -1115,7 +1122,7 @@ void create_screen_set_stopwatch() {
             lv_obj_set_size(obj, 100, 50);
             lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
             lv_obj_clear_flag(obj, LV_OBJ_FLAG_PRESS_LOCK|LV_OBJ_FLAG_SCROLLABLE);
-            lv_obj_set_style_bg_color(obj, lv_color_hex(0xffff2626), LV_PART_MAIN | LV_STATE_DEFAULT);
+            apply_style_style_reset_btn(obj);
             {
                 lv_obj_t *parent_obj = obj;
                 {
