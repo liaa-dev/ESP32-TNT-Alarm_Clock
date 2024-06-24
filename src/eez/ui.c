@@ -7,7 +7,6 @@
 #include "images.h"
 #include "actions.h"
 #include "vars.h"
-#include "fonts.h"
 
 
 
@@ -46,7 +45,7 @@ static const void *getLvglImageByName(const char *name) {
     return 0;
 }
 
-uint16_t getCurrentScreen() {
+int16_t getCurrentScreen() {
     return currentScreen+1;
 }
 

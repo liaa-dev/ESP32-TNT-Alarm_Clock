@@ -29,6 +29,8 @@ extern void action_settings_wi_fi_selected(lv_event_t * e);
 extern void action_settings_other_selected(lv_event_t * e);
 extern void action_settings_other_recalibrate_pressed(lv_event_t * e);
 extern void action_settings_other_reset_pressed(lv_event_t * e);
+extern void action_settings_wi_fi_popup_cancel_pressed(lv_event_t * e);
+extern void action_settings_wi_fi_popup_connect_pressed(lv_event_t * e);
 
 
 #ifdef __cplusplus

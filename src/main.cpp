@@ -5,7 +5,7 @@
 #include <SD.h>
 #include <eez/ui.h>
 #include <WiFi.h>
-#include <eez/styles.h>
+#include <eez/vars.h>
 #include <eez/fonts.h>
 #include <main.hpp>
 
@@ -22,15 +22,16 @@ void lvgl_debug_print(const char * buf);
 void handleLVGL();
 
 //TODO
-/*Messagebox die sagt
- jo aux mode is an und prefer 
-mode ist gechecked also alarm gehen 
-vor, und dann wenn aux 
-played (nehmen wir an) dann 
-gehen wir beim audio amplifier 
-auf den mute pin setzen den 
-auf high dann spielen wir den alarm und dann switchen wir wieder
-(GEILLL) nur wenn alarm over aux an ist aber! sonst wirds einfach mischmasch! :D*/
+/*Notice:
+
+AUX mode is enabled and the preference mode is selected.
+In the event of an alarm, the alarm will take precedence over the AUX input.
+Procedure during an alarm:
+
+When an alarm is played, we will set the mute pin of the audio amplifier to HIGH.
+The alarm sound will be played.
+After the alarm ends, the mute pin will be reset to its original state.
+Important: This behavior will only occur if the "Alarm over AUX" function is enabled to prevent signal mixing.*/
 
 void setup() {
   pinMode(TFT_BL, OUTPUT); // controlable with analogWrite(TFT_BL, 0-255);
@@ -120,45 +121,6 @@ void handleLVGL() {
   delay(5);
 }
 
-lv_obj_t *wi_fi_connect_popup;
-void create_wi_fi_connect_popup() {
-  wi_fi_connect_popup = lv_msgbox_create(NULL, LV_SYMBOL_WIFI " Connect to Wi-Fi", "Please enter the password", NULL, false);
-  //lv_obj_add_event_cb(mbox1, event_cb, LV_EVENT_VALUE_CHANGED, NULL);
-  lv_obj_center(wi_fi_connect_popup);
-  lv_obj_set_style_text_font(wi_fi_connect_popup, &lv_font_montserrat_16, 0);
-  lv_obj_set_style_bg_color(wi_fi_connect_popup, lv_color_hex(0x101010), 0);
-  lv_obj_set_style_text_color(wi_fi_connect_popup, lv_color_white(), 0);
-
-  lv_obj_align(lv_msgbox_get_title(wi_fi_connect_popup), LV_ALIGN_TOP_MID, 0, 0);
-  //lv_obj_center(lv_msgbox_get_text(wi_fi_connect_popup));
-
-  lv_obj_t *connectBtn = lv_btn_create(wi_fi_connect_popup);
-  lv_obj_align(connectBtn, LV_ALIGN_BOTTOM_MID, 0, 0);
-  lv_obj_set_size(connectBtn, 100, 50);
-  lv_obj_clear_flag(connectBtn, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_PRESS_LOCK);
-  apply_style_style_set_btn(connectBtn);
-  {
-    lv_obj_t *label = lv_label_create(connectBtn);
-    lv_obj_center(label);
-    lv_obj_set_size(label, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_label_set_text(label, "CONNECT");
-    apply_style_style_smallpixel7_32(label);
-  }
-
-  lv_obj_t *cancelBtn = lv_btn_create(wi_fi_connect_popup);
-  lv_obj_align(cancelBtn, LV_ALIGN_BOTTOM_MID, 0, 0);
-  lv_obj_set_size(cancelBtn, 100, 50);
-  lv_obj_clear_flag(cancelBtn, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_PRESS_LOCK);
-  apply_style_style_reset_btn(cancelBtn);
-  {
-    lv_obj_t *label = lv_label_create(cancelBtn);
-    lv_obj_center(label);
-    lv_obj_set_size(label, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-    lv_label_set_text(label, "CANCEL");
-    apply_style_style_smallpixel7_32(label);
-  }
-}
-
 static void event_handler_cb_wi_fi_table_draw_part(lv_event_t * e)
 {
     lv_obj_t * obj = lv_event_get_target(e);
@@ -199,7 +161,8 @@ static void event_handler_cb_wi_fi_table_value_changed(lv_event_t * e)
       uint16_t row;
       uint16_t col;
       lv_table_get_selected_cell(obj, &row, &col);
-      create_wi_fi_connect_popup();
+      delete_wi_fi_table();
+      set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(false);
     }
 }
 
@@ -238,6 +201,17 @@ extern void delete_wi_fi_table() {
     lv_obj_del(wi_fi_table);
     wi_fi_table = NULL;
   }
+}
+
+bool connectToWiFi(const char *ssid, const char *password) {
+  WiFi.begin(ssid, password);
+  delay(5000);
+  if(WiFi.status() != WL_CONNECTED) {
+    Serial.println("Could not connect to the WiFi network!");
+    return false;
+  }
+  Serial.println("Successfully connected to the WiFi network!");
+  return true;
 }
 
 // Implement and register a function which can copy the rendered image to an area of your display:

@@ -16,10 +16,13 @@ typedef struct _objects_t {
     lv_obj_t *action;
     lv_obj_t *alarm;
     lv_obj_t *alarm_time_input;
+    lv_obj_t *alarm_time_input_1;
+    lv_obj_t *answer;
     lv_obj_t *auto_set;
     lv_obj_t *change_date;
     lv_obj_t *change_time;
     lv_obj_t *clock;
+    lv_obj_t *connect_to_wi_fi_popup;
     lv_obj_t *date;
     lv_obj_t *date_input__day;
     lv_obj_t *date_input__month;
@@ -27,6 +30,7 @@ typedef struct _objects_t {
     lv_obj_t *description;
     lv_obj_t *description_1;
     lv_obj_t *description_2;
+    lv_obj_t *failed;
     lv_obj_t *info;
     lv_obj_t *minus_time;
     lv_obj_t *minus_time_1;
@@ -44,6 +48,9 @@ typedef struct _objects_t {
     lv_obj_t *obj1;
     lv_obj_t *obj10;
     lv_obj_t *obj11;
+    lv_obj_t *obj12;
+    lv_obj_t *obj13;
+    lv_obj_t *obj14;
     lv_obj_t *obj2;
     lv_obj_t *obj3;
     lv_obj_t *obj4;
@@ -68,6 +75,7 @@ typedef struct _objects_t {
     lv_obj_t *setting_time_input;
     lv_obj_t *spacer;
     lv_obj_t *status_bar;
+    lv_obj_t *success;
     lv_obj_t *time_input_1;
     lv_obj_t *title;
     lv_obj_t *title_1;
@@ -75,6 +83,7 @@ typedef struct _objects_t {
     lv_obj_t *title_3;
     lv_obj_t *volume_slider__alarm;
     lv_obj_t *volume_slider__aux_in;
+    lv_obj_t *wi_fi_connection_answer_popup;
 } objects_t;
 
 extern objects_t objects;

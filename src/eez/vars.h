@@ -46,7 +46,14 @@ enum FlowGlobalVariables {
     FLOW_GLOBAL_VARIABLE_SETTINGS_MUSIC_SELECTION = 28,
     FLOW_GLOBAL_VARIABLE_SETTINGS_MUSIC_ALARM_VOLUME = 29,
     FLOW_GLOBAL_VARIABLE_SETTINGS_MUSIC_AUXIN_VOLUME = 30,
-    FLOW_GLOBAL_VARIABLE_ALARM_SELECTED_REPEATS = 31
+    FLOW_GLOBAL_VARIABLE_ALARM_SELECTED_REPEATS = 31,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_WI_FI_HIDE_CONNECT_TO_WI_FI_POPUP = 32,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_WI_FI_POPUP_PASSWORD = 33,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_WI_FI_CONNECTION_ANSWER = 34,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_WI_FI_HIDE_ANSWER_POPUP = 35,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_WI_FI_HIDE_ANSWER_SUCCESS = 36,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_WI_FI_HIDE_ANSWER_FAILED = 37,
+    FLOW_GLOBAL_VARIABLE_SETTINGS_WI_FI_HIDE_ANSWER_LOADING = 38
 };
 
 // Native global variables
@@ -115,6 +122,22 @@ extern int32_t get_var_settings_music_auxin_volume();
 extern void set_var_settings_music_auxin_volume(int32_t value);
 extern int32_t get_var_alarm_selected_repeats();
 extern void set_var_alarm_selected_repeats(int32_t value);
+extern bool get_var_settings_wi_fi_hide_connect_to_wi_fi_popup();
+extern void set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(bool value);
+extern const char *get_var_settings_wi_fi_popup_password();
+extern void set_var_settings_wi_fi_popup_password(const char *value);
+extern const char *get_var_settings_wi_fi_popup_ssid();
+extern void set_var_settings_wi_fi_popup_ssid(const char *value);
+extern const char *get_var_settings_wi_fi_connection_answer();
+extern void set_var_settings_wi_fi_connection_answer(const char *value);
+extern bool get_var_settings_wi_fi_hide_answer_popup();
+extern void set_var_settings_wi_fi_hide_answer_popup(bool value);
+extern bool get_var_settings_wi_fi_hide_answer_success();
+extern void set_var_settings_wi_fi_hide_answer_success(bool value);
+extern bool get_var_settings_wi_fi_hide_answer_failed();
+extern void set_var_settings_wi_fi_hide_answer_failed(bool value);
+extern bool get_var_settings_wi_fi_hide_answer_loading();
+extern void set_var_settings_wi_fi_hide_answer_loading(bool value);
 
 
 #ifdef __cplusplus

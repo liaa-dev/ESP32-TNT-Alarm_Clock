@@ -301,6 +301,31 @@ static void event_handler_cb_set_settings_setting__reset(lv_event_t *e) {
     }
 }
 
+static void event_handler_cb_set_settings_obj12(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    if (event == LV_EVENT_RELEASED) {
+        action_settings_wi_fi_popup_cancel_pressed(e);
+    }
+}
+
+static void event_handler_cb_set_settings_obj13(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    if (event == LV_EVENT_RELEASED) {
+        action_settings_wi_fi_popup_connect_pressed(e);
+    }
+}
+
+static void event_handler_cb_set_settings_alarm_time_input_1(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    if (event == LV_EVENT_VALUE_CHANGED) {
+        lv_obj_t *ta = lv_event_get_target(e);
+        if (tick_value_change_obj != ta) {
+            const char *value = lv_textarea_get_text(ta);
+            set_var_settings_wi_fi_popup_password(value);
+        }
+    }
+}
+
 void create_screen_main() {
     lv_obj_t *obj = lv_obj_create(0);
     objects.main = obj;
@@ -549,13 +574,6 @@ void create_screen_main() {
                     }
                 }
             }
-        }
-        {
-            lv_obj_t *obj = lv_label_create(parent_obj);
-            lv_obj_set_pos(obj, 273, 195);
-            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_label_set_text(obj, "Messagebox die sagt\n jo aux mode is an und prefer \nmode ist gechecked also alarm gehen \nvor, und dann wenn aux \nplayed (nehmen wir an) dann \ngehen wir beim audio amplifier \nauf den mute pin setzen den \nauf high dann spielen wir den alarm und dann switchen wir wieder (GEILLL) nur wenn alarm over aux an ist aber! sonst wirds einfach mischmasch! :D");
-            lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
         }
     }
 }
@@ -810,7 +828,7 @@ void create_screen_set_alarm() {
             lv_obj_t *obj = lv_dropdown_create(parent_obj);
             lv_obj_set_pos(obj, 240, 139);
             lv_obj_set_size(obj, 150, LV_SIZE_CONTENT);
-            lv_dropdown_set_options(obj, "No Reason\nWake up!\nAppointment\nCustom (bluetooth)");
+            lv_dropdown_set_options(obj, "No Reason\nWake up!\nAppointment\nCustom (via wifi)");
             lv_obj_set_style_text_font(obj, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
@@ -1165,7 +1183,12 @@ void create_screen_set_settings() {
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, 480, 320);
     lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_bg_color(obj, lv_color_hex(0xff171717), LV_PART_MAIN | LV_STATE_DEFAULT);
+    if(get_var_settings_wi_fi_hide_connect_to_wi_fi_popup() || get_var_settings_wi_fi_hide_answer_popup()) {
+        lv_obj_set_style_bg_color(obj, lv_color_hex(0xff171717), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }else {
+        lv_obj_set_style_bg_color(obj, lv_color_white(), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_opa(obj, 50, LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
     lv_obj_set_style_text_font(obj, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT);
     {
         lv_obj_t *parent_obj = obj;
@@ -1587,6 +1610,139 @@ void create_screen_set_settings() {
                 }
             }
         }
+        {
+            // Connect to WiFi Popup
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            objects.connect_to_wi_fi_popup = obj;
+            lv_obj_set_pos(obj, 90, 60);
+            lv_obj_set_size(obj, 300, 200);
+            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff101010), LV_PART_MAIN | LV_STATE_DEFAULT);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    lv_obj_set_pos(obj, 23, 0);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_label_set_text(obj, "Please enter the \npassword");
+                    apply_style_style_smallpixel7_32(obj);
+                    lv_obj_set_style_text_font(obj, &ui_font_bm_army_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                }
+                {
+                    lv_obj_t *obj = lv_btn_create(parent_obj);
+                    objects.obj12 = obj;
+                    lv_obj_set_pos(obj, 151, 110);
+                    lv_obj_set_size(obj, 100, 50);
+                    lv_obj_add_event_cb(obj, event_handler_cb_set_settings_obj12, LV_EVENT_ALL, 0);
+                    lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                    apply_style_style_reset_btn(obj);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            lv_obj_t *obj = lv_label_create(parent_obj);
+                            lv_obj_set_pos(obj, -8, 5);
+                            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_label_set_text(obj, "CANCEL");
+                            apply_style_style_smallpixel7_32(obj);
+                        }
+                    }
+                }
+                {
+                    lv_obj_t *obj = lv_btn_create(parent_obj);
+                    objects.obj13 = obj;
+                    lv_obj_set_pos(obj, 14, 110);
+                    lv_obj_set_size(obj, 100, 50);
+                    lv_obj_add_event_cb(obj, event_handler_cb_set_settings_obj13, LV_EVENT_ALL, 0);
+                    lv_obj_add_flag(obj, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                    apply_style_style_set_btn(obj);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            lv_obj_t *obj = lv_label_create(parent_obj);
+                            lv_obj_set_pos(obj, -15, 5);
+                            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_label_set_text(obj, "CONNECT");
+                            apply_style_style_smallpixel7_32(obj);
+                            lv_obj_set_style_text_font(obj, &ui_font_smallpixel7_32, LV_PART_MAIN | LV_STATE_DEFAULT);
+                        }
+                    }
+                }
+                {
+                    // Password Input
+                    lv_obj_t *obj = lv_textarea_create(parent_obj);
+                    objects.alarm_time_input_1 = obj;
+                    lv_obj_set_pos(obj, 65, 50);
+                    lv_obj_set_size(obj, 135, 44);
+                    lv_textarea_set_max_length(obj, 5);
+                    lv_textarea_set_placeholder_text(obj, "Password");
+                    lv_textarea_set_one_line(obj, true);
+                    lv_textarea_set_password_mode(obj, true);
+                    lv_obj_add_event_cb(obj, event_handler_cb_set_settings_alarm_time_input_1, LV_EVENT_ALL, 0);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                    lv_obj_set_style_text_font(obj, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                }
+            }
+        }
+        {
+            // WiFi Connection Answer Popup
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            objects.wi_fi_connection_answer_popup = obj;
+            lv_obj_set_pos(obj, 90, 60);
+            lv_obj_set_size(obj, 300, 200);
+            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff101010), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_COLUMN, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_flex_cross_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    lv_obj_t *obj = lv_spinner_create(parent_obj, 1000, 60);
+                    objects.obj14 = obj;
+                    lv_obj_set_pos(obj, 0, 0);
+                    lv_obj_set_size(obj, 64, 64);
+                    lv_obj_set_style_arc_color(obj, lv_color_hex(0xffffff00), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+                    lv_obj_set_style_arc_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                }
+                {
+                    // Success
+                    lv_obj_t *obj = lv_img_create(parent_obj);
+                    objects.success = obj;
+                    lv_obj_set_pos(obj, 208, 67);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_img_set_src(obj, &img_success_64);
+                    lv_obj_add_flag(obj, LV_OBJ_FLAG_ADV_HITTEST);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                }
+                {
+                    // Failed
+                    lv_obj_t *obj = lv_img_create(parent_obj);
+                    objects.failed = obj;
+                    lv_obj_set_pos(obj, 208, 67);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_img_set_src(obj, &img_failed_64);
+                    lv_obj_add_flag(obj, LV_OBJ_FLAG_ADV_HITTEST);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                }
+                {
+                    // Answer
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    objects.answer = obj;
+                    lv_obj_set_pos(obj, 5735, 90);
+                    lv_obj_set_size(obj, 250, LV_SIZE_CONTENT);
+                    lv_label_set_text(obj, "");
+                    apply_style_style_smallpixel7_32(obj);
+                    lv_obj_set_style_text_font(obj, &ui_font_bm_army_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                }
+            }
+        }
     }
 }
 
@@ -1721,6 +1877,74 @@ void tick_screen_set_settings() {
                 tick_value_change_obj = objects.selected_setting__other;
                 if (new_val) lv_obj_add_flag(objects.selected_setting__other, LV_OBJ_FLAG_HIDDEN);
                 else lv_obj_clear_flag(objects.selected_setting__other, LV_OBJ_FLAG_HIDDEN);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            bool new_val = get_var_settings_wi_fi_hide_connect_to_wi_fi_popup();
+            bool cur_val = lv_obj_has_flag(objects.connect_to_wi_fi_popup, LV_OBJ_FLAG_HIDDEN);
+            if (new_val != cur_val) {
+                tick_value_change_obj = objects.connect_to_wi_fi_popup;
+                if (new_val) lv_obj_add_flag(objects.connect_to_wi_fi_popup, LV_OBJ_FLAG_HIDDEN);
+                else lv_obj_clear_flag(objects.connect_to_wi_fi_popup, LV_OBJ_FLAG_HIDDEN);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            const char *new_val = get_var_settings_wi_fi_popup_password();
+            const char *cur_val = lv_textarea_get_text(objects.alarm_time_input_1);
+            if (strcmp(new_val, cur_val) != 0) {
+                tick_value_change_obj = objects.alarm_time_input_1;
+                lv_textarea_set_text(objects.alarm_time_input_1, new_val);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            bool new_val = get_var_settings_wi_fi_hide_connect_to_wi_fi_popup();
+            bool cur_val = lv_obj_has_flag(objects.wi_fi_connection_answer_popup, LV_OBJ_FLAG_HIDDEN);
+            if (new_val != cur_val) {
+                tick_value_change_obj = objects.wi_fi_connection_answer_popup;
+                if (new_val) lv_obj_add_flag(objects.wi_fi_connection_answer_popup, LV_OBJ_FLAG_HIDDEN);
+                else lv_obj_clear_flag(objects.wi_fi_connection_answer_popup, LV_OBJ_FLAG_HIDDEN);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            bool new_val = get_var_settings_wi_fi_hide_answer_loading();
+            bool cur_val = lv_obj_has_flag(objects.obj14, LV_OBJ_FLAG_HIDDEN);
+            if (new_val != cur_val) {
+                tick_value_change_obj = objects.obj14;
+                if (new_val) lv_obj_add_flag(objects.obj14, LV_OBJ_FLAG_HIDDEN);
+                else lv_obj_clear_flag(objects.obj14, LV_OBJ_FLAG_HIDDEN);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            bool new_val = get_var_settings_wi_fi_hide_answer_success();
+            bool cur_val = lv_obj_has_flag(objects.success, LV_OBJ_FLAG_HIDDEN);
+            if (new_val != cur_val) {
+                tick_value_change_obj = objects.success;
+                if (new_val) lv_obj_add_flag(objects.success, LV_OBJ_FLAG_HIDDEN);
+                else lv_obj_clear_flag(objects.success, LV_OBJ_FLAG_HIDDEN);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            bool new_val = get_var_settings_wi_fi_hide_answer_failed();
+            bool cur_val = lv_obj_has_flag(objects.failed, LV_OBJ_FLAG_HIDDEN);
+            if (new_val != cur_val) {
+                tick_value_change_obj = objects.failed;
+                if (new_val) lv_obj_add_flag(objects.failed, LV_OBJ_FLAG_HIDDEN);
+                else lv_obj_clear_flag(objects.failed, LV_OBJ_FLAG_HIDDEN);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            const char *new_val = get_var_settings_wi_fi_connection_answer();
+            const char *cur_val = lv_label_get_text(objects.answer);
+            if (strcmp(new_val, cur_val) != 0) {
+                tick_value_change_obj = objects.answer;
+                lv_label_set_text(objects.answer, new_val);
                 tick_value_change_obj = NULL;
             }
         }

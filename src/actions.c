@@ -3,6 +3,7 @@
 #include <eez/vars.h>
 #include <lvgl.h>
 #include <main.hpp>
+#include <Arduino.h>
 
 void hideSettings();
 
@@ -107,11 +108,43 @@ extern void action_settings_other_reset_pressed(lv_event_t * e) {
 
 }
 
+extern void action_settings_wi_fi_popup_cancel_pressed(lv_event_t * e) {
+    action_settings_wi_fi_selected(e);
+}
+
+extern void action_settings_wi_fi_popup_connect_pressed(lv_event_t * e) {
+    set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(true);
+    set_var_settings_wi_fi_hide_answer_popup(false);
+    set_var_settings_wi_fi_hide_answer_loading(false);
+    set_var_settings_wi_fi_connection_answer("Connecting...");
+
+    if(connectToWiFi(get_var_settings_wi_fi_popup_ssid(), get_var_settings_wi_fi_popup_password())) {
+        set_var_settings_wi_fi_hide_answer_loading(true);
+        set_var_settings_wi_fi_hide_answer_success(false);
+        delay(2000);
+        set_var_settings_wi_fi_hide_answer_success(true);
+        set_var_settings_wi_fi_hide_answer_failed(true);
+        set_var_settings_wi_fi_hide_answer_popup(true);
+    }else {
+        set_var_settings_wi_fi_hide_answer_loading(true);
+        set_var_settings_wi_fi_hide_answer_failed(false);
+        delay(2000);
+        set_var_settings_wi_fi_hide_answer_failed(true);
+        set_var_settings_wi_fi_hide_answer_success(true);
+        set_var_settings_wi_fi_hide_answer_popup(true);
+    }
+}
+
 void hideSettings() {
     delete_wi_fi_table();
     set_var_settings_hide_selection(true);
     set_var_settings_hide_time(true);
     set_var_settings_hide_music(true);
     set_var_settings_hide_wi_fi(true);
+    set_var_settings_wi_fi_hide_answer_popup(true);
+    set_var_settings_wi_fi_hide_answer_success(true);
+    set_var_settings_wi_fi_hide_answer_failed(true);
+    set_var_settings_wi_fi_hide_answer_loading(true);
+    set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(true);
     set_var_settings_hide_other(true);
 }

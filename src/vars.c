@@ -32,6 +32,14 @@ int32_t var_settings_music_selected = 0;
 const char *var_settings_music_selection = "None\nBeep";
 int32_t var_settings_music_alarm_volume = 50;
 int32_t var_settings_music_auxin_volume = 50;
+bool var_settings_wi_fi_hide_connect_to_wi_fi_popup = true;
+const char *var_settings_wi_fi_popup_password = "";
+const char *var_settings_wi_fi_popup_ssid = "";
+bool var_settings_wi_fi_hide_answer_popup = true;
+const char *var_settings_wi_fi_connection_answer = "";
+bool var_settings_wi_fi_hide_answer_success = true;
+bool var_settings_wi_fi_hide_answer_failed = true;
+bool var_settings_wi_fi_hide_answer_loading = true;
 
 /* MAIN SCREEN*/
 
@@ -244,4 +252,52 @@ extern int32_t get_var_settings_music_auxin_volume() {
 }
 extern void set_var_settings_music_auxin_volume(int32_t value) {
     var_settings_music_auxin_volume = value;
+}
+extern bool get_var_settings_wi_fi_hide_connect_to_wi_fi_popup() {
+    return var_settings_wi_fi_hide_connect_to_wi_fi_popup;
+}
+extern void set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(bool value) {
+    var_settings_wi_fi_hide_connect_to_wi_fi_popup = value;
+}
+extern const char *get_var_settings_wi_fi_popup_password() {
+    return var_settings_wi_fi_popup_password;
+}
+extern void set_var_settings_wi_fi_popup_password(const char *value) {
+    var_settings_wi_fi_popup_password = value;
+}
+extern const char *get_var_settings_wi_fi_popup_ssid() {
+    return var_settings_wi_fi_popup_ssid;
+}
+extern void set_var_settings_wi_fi_popup_ssid(const char *value) {
+    var_settings_wi_fi_popup_ssid = value;
+}
+extern bool get_var_settings_wi_fi_hide_answer_popup() {
+    return var_settings_wi_fi_hide_answer_popup;
+}
+extern void set_var_settings_wi_fi_hide_answer_popup(bool value) {
+    var_settings_wi_fi_hide_answer_popup = value;
+}
+extern const char *get_var_settings_wi_fi_connection_answer() {
+    return var_settings_wi_fi_connection_answer;
+}
+extern void set_var_settings_wi_fi_connection_answer(const char *value) {
+    var_settings_wi_fi_connection_answer = value;
+}
+extern bool get_var_settings_wi_fi_hide_answer_success() {
+    return var_settings_wi_fi_hide_answer_success;
+}
+extern void set_var_settings_wi_fi_hide_answer_success(bool value) {
+    var_settings_wi_fi_hide_answer_success = value;
+}
+extern bool get_var_settings_wi_fi_hide_answer_failed() {
+    return var_settings_wi_fi_hide_answer_failed;
+}
+extern void set_var_settings_wi_fi_hide_answer_failed(bool value) {
+    var_settings_wi_fi_hide_answer_failed = value;
+}
+extern bool get_var_settings_wi_fi_hide_answer_loading() {
+    return var_settings_wi_fi_hide_answer_loading;
+}
+extern void set_var_settings_wi_fi_hide_answer_loading(bool value) {
+    var_settings_wi_fi_hide_answer_loading = value;
 }
