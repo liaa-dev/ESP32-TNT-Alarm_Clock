@@ -30,6 +30,7 @@ typedef struct _objects_t {
     lv_obj_t *info;
     lv_obj_t *minus_time;
     lv_obj_t *minus_time_1;
+    lv_obj_t *music_selection;
     lv_obj_t *next_screen;
     lv_obj_t *next_screen_1;
     lv_obj_t *next_screen_2;
@@ -51,16 +52,15 @@ typedef struct _objects_t {
     lv_obj_t *obj7;
     lv_obj_t *obj8;
     lv_obj_t *obj9;
+    lv_obj_t *play_alarm_over_aux;
     lv_obj_t *plus_time;
     lv_obj_t *plus_time_1;
     lv_obj_t *select_setting;
-    lv_obj_t *selected_setting__bluetooth;
+    lv_obj_t *selected_setting__music;
     lv_obj_t *selected_setting__other;
     lv_obj_t *selected_setting__time;
-    lv_obj_t *setting__bluetooth;
-    lv_obj_t *setting__connect;
+    lv_obj_t *setting__music;
     lv_obj_t *setting__other;
-    lv_obj_t *setting__pair;
     lv_obj_t *setting__recalibrate_touch;
     lv_obj_t *setting__reset;
     lv_obj_t *setting__time;
@@ -73,6 +73,8 @@ typedef struct _objects_t {
     lv_obj_t *title_1;
     lv_obj_t *title_2;
     lv_obj_t *title_3;
+    lv_obj_t *volume_slider__alarm;
+    lv_obj_t *volume_slider__aux_in;
 } objects_t;
 
 extern objects_t objects;

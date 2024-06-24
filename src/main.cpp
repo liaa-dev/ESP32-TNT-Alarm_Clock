@@ -6,12 +6,7 @@
 #include <eez/ui.h>
 #include <WiFi.h>
 #include <eez/fonts.h>
-#include <BluetoothA2DP.h>
-#include <AudioTools.h>
 #include <main.hpp>
-
-//I2SStream i2s;
-//BluetoothA2DPSink a2dp_sink(i2s);
 
 TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 
@@ -27,8 +22,6 @@ void handleLVGL();
 
 void setup() {
   pinMode(TFT_BL, OUTPUT); // controlable with analogWrite(TFT_BL, 0-255);
-
-  //a2dp_sink.start("MyMusic");
 
   Serial.begin(115200);
   Serial.println("Starting...");
@@ -148,7 +141,7 @@ static void event_handler_cb_wifi_table_draw_part(lv_event_t * e)
 
 lv_obj_t *wifi_table;
 extern void create_wi_fi_table() {
-  if(wifi_table != NULL) lv_obj_del(wifi_table);
+  delete_wi_fi_table();
   wifi_table = lv_table_create(lv_scr_act());
   int pixel_size = 30;
   lv_obj_set_pos(wifi_table, 90, 109);
@@ -161,8 +154,8 @@ extern void create_wi_fi_table() {
   lv_table_set_cell_value(wifi_table, 0, 3, "Auth.");
 
   int foundNetworks = WiFi.scanNetworks();
-  for(int i = 0; i < foundNetworks; i++) {
-      lv_table_set_cell_value(wifi_table, i, 0, String(i + 1).c_str());
+  for(int i = 1; i < foundNetworks; i++) {
+      lv_table_set_cell_value(wifi_table, i, 0, String(i).c_str());
       lv_table_set_cell_value(wifi_table, i, 1, WiFi.SSID(i).c_str());
       lv_table_set_cell_value(wifi_table, i, 2, String(WiFi.RSSI(i)).c_str());
       lv_table_set_cell_value(wifi_table, i, 3, WiFi.encryptionType(i) == WIFI_AUTH_OPEN ? "Open" : "WPA/WPA2");
@@ -173,7 +166,10 @@ extern void create_wi_fi_table() {
 }
 
 extern void delete_wi_fi_table() {
-  if(wifi_table != NULL) lv_obj_del(wifi_table);
+  if(wifi_table != NULL) {
+    lv_obj_del(wifi_table);
+    wifi_table = NULL;
+  }
 }
 
 // Implement and register a function which can copy the rendered image to an area of your display:

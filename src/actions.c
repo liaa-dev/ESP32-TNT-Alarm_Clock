@@ -29,7 +29,7 @@ extern void action_go_to_settings_screen(lv_event_t * e) {
 }
 
 extern void action_go_back(lv_event_t * e) {
-    if(getCurrentScreen() == SCREEN_ID_SET_SETTINGS) {
+    if(getCurrentScreen() == SCREEN_ID_SET_SETTINGS && get_var_settings_title() != "Settings"){
         hideSettings();
         set_var_settings_title("Settings");
         set_var_settings_hide_selection(false);
@@ -74,17 +74,16 @@ extern void action_settings_time_selected(lv_event_t * e) {
     set_var_settings_title("Time");
     set_var_settings_hide_time(false);
 }
-
+extern void action_settings_music_selected(lv_event_t * e) {
+    hideSettings();
+    set_var_settings_title("Music");
+    set_var_settings_hide_music(false);
+}
 extern void action_settings_wi_fi_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_title("WiFi");
     set_var_settings_hide_wi_fi(false);
     create_wi_fi_table();
-}
-extern void action_settings_bluetooth_selected(lv_event_t * e) {
-    hideSettings();
-    set_var_settings_title("Bluetooth");
-    set_var_settings_hide_bluetooth(false);
 }
 extern void action_settings_other_selected(lv_event_t * e) {
     hideSettings();
@@ -112,7 +111,7 @@ void hideSettings() {
     delete_wi_fi_table();
     set_var_settings_hide_selection(true);
     set_var_settings_hide_time(true);
+    set_var_settings_hide_music(true);
     set_var_settings_hide_wi_fi(true);
-    set_var_settings_hide_bluetooth(true);
     set_var_settings_hide_other(true);
 }
