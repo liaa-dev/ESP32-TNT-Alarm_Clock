@@ -3,6 +3,8 @@
         "wifi.h": "c",
         "lvgl.h": "c",
         "screens.h": "c",
-        "fonts.h": "c"
+        "fonts.h": "c",
+        "images.h": "c",
+        "actions.h": "c"
     }
 }

@@ -88,11 +88,11 @@ void setup() {
 
   Serial.println("LVGL initialized!");
 
-  Serial.println("Initializing SD card...");
+  /*Serial.println("Initializing SD card...");
   if (!SD.begin(SD_CS)) {
     Serial.println(F("SD Card failed, or not present! Please press RESET to try again!"));
     return;
-  }
+  }*/
 
   Serial.println("SD card initialized!");
 
@@ -102,7 +102,7 @@ void setup() {
   delay(100);
   Serial.println("WiFi initialized!");
 
-  lv_fs_fatfs_init();
+  //lv_fs_fatfs_init();
 
   ui_init();
 
@@ -161,8 +161,7 @@ static void event_handler_cb_wi_fi_table_value_changed(lv_event_t * e)
       uint16_t row;
       uint16_t col;
       lv_table_get_selected_cell(obj, &row, &col);
-      delete_wi_fi_table();
-      set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(false);
+      //set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(false);
     }
 }
 

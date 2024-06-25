@@ -7,12 +7,8 @@
 extern "C" {
 #endif
 
-extern void action_go_to_main_screen(lv_event_t * e);
-extern void action_go_to_set_alarm_screen(lv_event_t * e);
-extern void action_go_to_timer_screen(lv_event_t * e);
-extern void action_go_to_stopwatch_screen(lv_event_t * e);
-extern void action_go_to_settings_screen(lv_event_t * e);
-extern void action_go_back(lv_event_t * e);
+extern void action_screen_go_forward(lv_event_t * e);
+extern void action_screen_go_backward(lv_event_t * e);
 extern void action_alarm_plus_long_pressed(lv_event_t * e);
 extern void action_alarm_plus_pressed(lv_event_t * e);
 extern void action_alarm_minus_long_pressed(lv_event_t * e);
@@ -24,13 +20,12 @@ extern void action_timer_reset_pressed(lv_event_t * e);
 extern void action_stopwatch_start_pressed(lv_event_t * e);
 extern void action_stopwatch_reset_pressed(lv_event_t * e);
 extern void action_settings_time_selected(lv_event_t * e);
-extern void action_settings_music_selected(lv_event_t * e);
-extern void action_settings_wi_fi_selected(lv_event_t * e);
+extern void action_settings_alarm_selected(lv_event_t * e);
+extern void action_settings_audio_selected(lv_event_t * e);
+extern void action_settings_wifi_selected(lv_event_t * e);
 extern void action_settings_other_selected(lv_event_t * e);
-extern void action_settings_other_recalibrate_pressed(lv_event_t * e);
+extern void action_settings_other_calibrate_pressed(lv_event_t * e);
 extern void action_settings_other_reset_pressed(lv_event_t * e);
-extern void action_settings_wi_fi_popup_cancel_pressed(lv_event_t * e);
-extern void action_settings_wi_fi_popup_connect_pressed(lv_event_t * e);
 
 
 #ifdef __cplusplus

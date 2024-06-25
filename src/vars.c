@@ -1,303 +1,317 @@
 #include <eez/vars.h>
 
-const char *var_digital_time = "14:09";
-const char *var_digital_date = "Wednesday, May 12";
-const char *var_digital_temperature = "30°C";
-const char *var_running_action = "Action";
-const char *var_running_action_time = "None";
-const char *var_status_bar_text = "Nothing Playing";
-int32_t var_status_bar_value = 0;
-const char *var_alarm_time = "06:30";
-const char *var_alarm_reason = "None";
-int32_t var_alarm_selected_reason = 0;
-int32_t var_alarm_selected_repeats = 0;
-const char *var_timer_time = "00:00";
-int32_t var_timer_value = 0;
-const char *var_stopwatch_time = "";
-bool var_stopwatch_hide_pause_btn = true;
-bool var_stopwatch_hide_start_btn = false;
-const char *var_settings_title = "Settings";
-bool var_settings_hide_time = true;
-bool var_settings_hide_wi_fi = true;
-bool var_settings_hide_music = true;
-bool var_settings_hide_other = true;
-bool var_settings_hide_selection = false;
-bool var_settings_time_auto_set_checked = true;
-const char *var_settings_time_changed_time = "";
-int32_t var_settings_time_month_selected = 0;
-int32_t var_settings_time_day_selected = 0;
-int32_t var_settings_time_year_selected = 0;
-bool var_settings_music_alarm_over_aux_checked = true;
-int32_t var_settings_music_selected = 0;
-const char *var_settings_music_selection = "None\nBeep";
-int32_t var_settings_music_alarm_volume = 50;
-int32_t var_settings_music_auxin_volume = 50;
-bool var_settings_wi_fi_hide_connect_to_wi_fi_popup = true;
-const char *var_settings_wi_fi_popup_password = "";
-const char *var_settings_wi_fi_popup_ssid = "";
-bool var_settings_wi_fi_hide_answer_popup = true;
-const char *var_settings_wi_fi_connection_answer = "";
-bool var_settings_wi_fi_hide_answer_success = true;
-bool var_settings_wi_fi_hide_answer_failed = true;
-bool var_settings_wi_fi_hide_answer_loading = true;
+static const char *var_main_time = "23:16";
+static const char *var_main_date = "Thursday, Sept 3";
+static const char *var_main_day_today = "Mon";
+static const char *var_main_day_tomorrow = "Tue";
+static const char *var_main_day_scndnextday = "Wed";
+static const char *var_main_day_thrdnextday = "Thu";
+static const char *var_main_temp_today = "25°C";
+static const char *var_main_temp_nextday = "26°C";
+static const char *var_main_temp_scndnextday = "27°C";
+static const char *var_main_temp_thrdnextday = "28°C";
+static bool var_main_is_wifi_connected = false;
+static const char *var_main_alarm_time = "06:00";
+static const char *var_main_alarm_reason = "Wake up";
+static const char *var_alarm_reasons = "Wake up\nAppointment\nOther (via wifi)";
+static int32_t var_alarm_selected_reason = 0;
+static const char *var_timer_time = "00:00";
+static int32_t var_timer_arc_value = 0;
+static const char *var_stopwatch_time = "00:00:00";
+static const char *var_settings_title = "Settings";
+static bool var_settings_hide_selection = false;
+static bool var_settings_hide_setting_time = true;
+static bool var_settings_hide_setting_audio = true;
+static bool var_settings_hide_setting_wifi = true;
+static bool var_settings_hide_setting_other = true;
+static bool var_settings_setting_time_checked_autoset = true;
+static const char *var_settings_setting_time_new_time = "";
+static int32_t var_settings_setting_time_selected_month = 0;
+static int32_t var_settings_setting_time_selected_day = 0;
+static int32_t var_settings_setting_time_selected_year = 0;
+static int32_t var_settings_setting_alarm_selected_repeats = 0;
+static int32_t var_settings_setting_alarm_selected_repeat_after = 0;
+static bool var_settings_setting_audio_checked_alarm_over_aux = true;
+static const char *var_settings_setting_audio_selected_music = "";
+static int32_t var_settings_setting_audio_alarm_volume_value = 50;
+static int32_t var_settings_setting_audio_auxin_volume_value = 50;
 
-/* MAIN SCREEN*/
-
-extern const char *get_var_digital_time() {
-    return var_digital_time;
-}
-extern void set_var_digital_time(const char *value) {
-    var_digital_time = value;
+const char *get_var_main_time() {
+    return var_main_time;
 }
 
-extern const char *get_var_digital_date() {
-    return var_digital_date;
-}
-extern void set_var_digital_date(const char *value) {
-    var_digital_date = value;
-}
-extern const char *get_var_digital_temperature() {
-    return var_digital_temperature;
-}
-extern void set_var_digital_temperature(const char *value) {
-    var_digital_temperature = value;
+void set_var_main_time(const char *value) {
+    var_main_time = value;
 }
 
-extern const char *get_var_running_action() {
-    return var_running_action;
-}
-extern void set_var_running_action(const char *value) {
-    var_running_action = value;
-}
-extern const char *get_var_running_action_time() {
-    return var_running_action_time;
-}
-extern void set_var_running_action_time(const char *value) {
-    var_running_action_time = value;
+const char *get_var_main_date() {
+    return var_main_date;
 }
 
-extern const char *get_var_status_bar_text() {
-    return var_status_bar_text;
+void set_var_main_date(const char *value) {
+    var_main_date = value;
 }
 
-extern int32_t get_var_status_bar_value() {
-    return var_status_bar_value;
-}
-extern void set_var_status_bar_value(int32_t value) {
-    var_status_bar_value = value;
+bool get_var_main_is_wifi_connected() {
+    return var_main_is_wifi_connected;
 }
 
-extern void set_var_status_bar_text(const char *value) {
-    var_status_bar_text = value;
+void set_var_main_is_wifi_connected(bool value) {
+    var_main_is_wifi_connected = !value; // Negate to hide/show the label
+                                         // (hide = true, show = false)
 }
 
-/* ALARM SCREEN*/
+const char *get_var_main_alarm_time() {
+    return var_main_alarm_time;
+}
 
-extern const char *get_var_alarm_time() {
-    return var_alarm_time;
+void set_var_main_alarm_time(const char *value) {
+    var_main_alarm_time = value;
 }
-extern void set_var_alarm_time(const char *value) {
-    var_alarm_time = value;
+
+const char *get_var_main_alarm_reason() {
+    return var_main_alarm_reason;
 }
-extern const char *get_var_alarm_reason() {
-    return var_alarm_reason;
+
+void set_var_main_alarm_reason(const char *value) {
+    var_main_alarm_reason = value;
 }
-extern void set_var_alarm_reason(const char *value) {
-    var_alarm_reason = value;
+
+const char *get_var_alarm_reasons() {
+    return var_alarm_reasons;
 }
-extern int32_t get_var_alarm_selected_reason() {
+
+void set_var_alarm_reasons(const char *value) {
+    var_alarm_reasons = value;
+}
+
+int32_t get_var_alarm_selected_reason() {
     return var_alarm_selected_reason;
 }
-extern void set_var_alarm_selected_reason(int32_t value) {
+
+void set_var_alarm_selected_reason(int32_t value) {
     var_alarm_selected_reason = value;
 }
-extern int32_t get_var_alarm_selected_repeats() {
-    return var_alarm_selected_repeats;
-}
-extern void set_var_alarm_selected_repeats(int32_t value) {
-    var_alarm_selected_repeats = value;
-}
 
-/* TIMER SCREEN */
-
-extern const char *get_var_timer_time() {
+const char *get_var_timer_time() {
     return var_timer_time;
 }
-extern void set_var_timer_time(const char *value) {
+
+void set_var_timer_time(const char *value) {
     var_timer_time = value;
 }
-extern int32_t get_var_timer_value() {
-    return var_timer_value;
-}
-extern void set_var_timer_value(int32_t value) {
-    var_timer_value = value;
+
+int32_t get_var_timer_arc_value() {
+    return var_timer_arc_value;
 }
 
-/* STOPWATCH SCREEN */
-
-extern void set_var_stopwatch_time(const char *value) {
-    var_stopwatch_time = value;
+void set_var_timer_arc_value(int32_t value) {
+    var_timer_arc_value = value;
 }
-extern const char *get_var_stopwatch_time() {
+
+const char *get_var_stopwatch_time() {
     return var_stopwatch_time;
 }
-extern bool get_var_stopwatch_hide_pause_btn() {
-    return var_stopwatch_hide_pause_btn;
-}
-extern void set_var_stopwatch_hide_pause_btn(bool value) {
-    var_stopwatch_hide_pause_btn = value;
-}
-extern bool get_var_stopwatch_hide_start_btn() {
-    return var_stopwatch_hide_start_btn;
-}
-extern void set_var_stopwatch_hide_start_btn(bool value) {
-    var_stopwatch_hide_start_btn = value;
+
+void set_var_stopwatch_time(const char *value) {
+    var_stopwatch_time = value;
 }
 
-/* SETTINGS SCREEN */
-
-extern const char *get_var_settings_title() {
+const char *get_var_settings_title() {
     return var_settings_title;
 }
-extern void set_var_settings_title(const char *value) {
+
+void set_var_settings_title(const char *value) {
     var_settings_title = value;
 }
-extern bool get_var_settings_hide_time() {
-    return var_settings_hide_time;
-}
-extern void set_var_settings_hide_time(bool value) {
-    var_settings_hide_time = value;
-}
-extern bool get_var_settings_hide_music() {
-    return var_settings_hide_music;
-}
-extern void set_var_settings_hide_music(bool value) {
-    var_settings_hide_music = value;
-}
-extern bool get_var_settings_hide_wi_fi() {
-    return var_settings_hide_wi_fi;
-}
-extern void set_var_settings_hide_wi_fi(bool value) {
-    var_settings_hide_wi_fi = value;
-}
-extern bool get_var_settings_hide_other() {
-    return var_settings_hide_other;
-}
-extern void set_var_settings_hide_other(bool value) {
-    var_settings_hide_other = value;
-}
-extern bool get_var_settings_hide_selection() {
+
+bool get_var_settings_hide_selection() {
     return var_settings_hide_selection;
 }
-extern void set_var_settings_hide_selection(bool value) {
+
+void set_var_settings_hide_selection(bool value) {
     var_settings_hide_selection = value;
 }
-extern bool get_var_settings_time_auto_set_checked() {
-    return var_settings_time_auto_set_checked;
-}
-extern void set_var_settings_time_auto_set_checked(bool value) {
-    var_settings_time_auto_set_checked = value;
-}
-extern const char *get_var_settings_time_changed_time() {
-    return var_settings_time_changed_time;
-}
-extern void set_var_settings_time_changed_time(const char *value) {
-    var_settings_time_changed_time = value;
-}
-extern int32_t get_var_settings_time_month_selected() {
-    return var_settings_time_month_selected;
-}
-extern void set_var_settings_time_month_selected(int32_t value) {
-    var_settings_time_month_selected = value;
-}
-extern int32_t get_var_settings_time_day_selected() {
-    return var_settings_time_day_selected;
-}
-extern void set_var_settings_time_day_selected(int32_t value) {
-    var_settings_time_day_selected = value;
-}
-extern int32_t get_var_settings_time_year_selected() {
-    return var_settings_time_year_selected;
-}
-extern void set_var_settings_time_year_selected(int32_t value) {
-    var_settings_time_year_selected = value;
+
+bool get_var_settings_hide_setting_time() {
+    return var_settings_hide_setting_time;
 }
 
-extern bool get_var_settings_music_alarm_over_aux_checked() {
-    return var_settings_music_alarm_over_aux_checked;
+void set_var_settings_hide_setting_time(bool value) {
+    var_settings_hide_setting_time = value;
 }
-extern void set_var_settings_music_alarm_over_aux_checked(bool value) {
-    var_settings_music_alarm_over_aux_checked = value;
+
+bool get_var_settings_hide_setting_audio() {
+    return var_settings_hide_setting_audio;
 }
-extern int32_t get_var_settings_music_selected() {
-    return var_settings_music_selected;
+
+void set_var_settings_hide_setting_audio(bool value) {
+    var_settings_hide_setting_audio = value;
 }
-extern void set_var_settings_music_selected(int32_t value) {
-    var_settings_music_selected = value;
+
+bool get_var_settings_hide_setting_wifi() {
+    return var_settings_hide_setting_wifi;
 }
-extern const char *get_var_settings_music_selection() {
-    return var_settings_music_selection;
+
+void set_var_settings_hide_setting_wifi(bool value) {
+    var_settings_hide_setting_wifi = value;
 }
-extern void set_var_settings_music_selection(const char *value) {
-    var_settings_music_selection = value;
+
+bool get_var_settings_hide_setting_other() {
+    return var_settings_hide_setting_other;
 }
-extern int32_t get_var_settings_music_alarm_volume() {
-    return var_settings_music_alarm_volume;
+
+void set_var_settings_hide_setting_other(bool value) {
+    var_settings_hide_setting_other = value;
 }
-extern void set_var_settings_music_alarm_volume(int32_t value) {
-    var_settings_music_alarm_volume = value;
+
+bool get_var_settings_setting_time_checked_autoset() {
+    return var_settings_setting_time_checked_autoset;
 }
-extern int32_t get_var_settings_music_auxin_volume() {
-    return var_settings_music_auxin_volume;
+
+void set_var_settings_setting_time_checked_autoset(bool value) {
+    var_settings_setting_time_checked_autoset = value;
 }
-extern void set_var_settings_music_auxin_volume(int32_t value) {
-    var_settings_music_auxin_volume = value;
+
+const char *get_var_settings_setting_time_new_time() {
+    return var_settings_setting_time_new_time;
 }
-extern bool get_var_settings_wi_fi_hide_connect_to_wi_fi_popup() {
-    return var_settings_wi_fi_hide_connect_to_wi_fi_popup;
+
+void set_var_settings_setting_time_new_time(const char *value) {
+    var_settings_setting_time_new_time = value;
 }
-extern void set_var_settings_wi_fi_hide_connect_to_wi_fi_popup(bool value) {
-    var_settings_wi_fi_hide_connect_to_wi_fi_popup = value;
+
+int32_t get_var_settings_setting_time_selected_month() {
+    return var_settings_setting_time_selected_month;
 }
-extern const char *get_var_settings_wi_fi_popup_password() {
-    return var_settings_wi_fi_popup_password;
+
+void set_var_settings_setting_time_selected_month(int32_t value) {
+    var_settings_setting_time_selected_month = value;
 }
-extern void set_var_settings_wi_fi_popup_password(const char *value) {
-    var_settings_wi_fi_popup_password = value;
+
+int32_t get_var_settings_setting_time_selected_day() {
+    return var_settings_setting_time_selected_day;
 }
-extern const char *get_var_settings_wi_fi_popup_ssid() {
-    return var_settings_wi_fi_popup_ssid;
+
+void set_var_settings_setting_time_selected_day(int32_t value) {
+    var_settings_setting_time_selected_day = value;
 }
-extern void set_var_settings_wi_fi_popup_ssid(const char *value) {
-    var_settings_wi_fi_popup_ssid = value;
+
+int32_t get_var_settings_setting_time_selected_year() {
+    return var_settings_setting_time_selected_year;
 }
-extern bool get_var_settings_wi_fi_hide_answer_popup() {
-    return var_settings_wi_fi_hide_answer_popup;
+
+void set_var_settings_setting_time_selected_year(int32_t value) {
+    var_settings_setting_time_selected_year = value;
 }
-extern void set_var_settings_wi_fi_hide_answer_popup(bool value) {
-    var_settings_wi_fi_hide_answer_popup = value;
+
+int32_t get_var_settings_setting_alarm_selected_repeats() {
+    return var_settings_setting_alarm_selected_repeats;
 }
-extern const char *get_var_settings_wi_fi_connection_answer() {
-    return var_settings_wi_fi_connection_answer;
+
+void set_var_settings_setting_alarm_selected_repeats(int32_t value) {
+    var_settings_setting_alarm_selected_repeats = value;
 }
-extern void set_var_settings_wi_fi_connection_answer(const char *value) {
-    var_settings_wi_fi_connection_answer = value;
+
+int32_t get_var_settings_setting_alarm_selected_repeat_after() {
+    return var_settings_setting_alarm_selected_repeat_after;
 }
-extern bool get_var_settings_wi_fi_hide_answer_success() {
-    return var_settings_wi_fi_hide_answer_success;
+
+void set_var_settings_setting_alarm_selected_repeat_after(int32_t value) {
+    var_settings_setting_alarm_selected_repeat_after = value;
 }
-extern void set_var_settings_wi_fi_hide_answer_success(bool value) {
-    var_settings_wi_fi_hide_answer_success = value;
+
+bool get_var_settings_setting_audio_checked_alarm_over_aux() {
+    return var_settings_setting_audio_checked_alarm_over_aux;
 }
-extern bool get_var_settings_wi_fi_hide_answer_failed() {
-    return var_settings_wi_fi_hide_answer_failed;
+
+void set_var_settings_setting_audio_checked_alarm_over_aux(bool value) {
+    var_settings_setting_audio_checked_alarm_over_aux = value;
 }
-extern void set_var_settings_wi_fi_hide_answer_failed(bool value) {
-    var_settings_wi_fi_hide_answer_failed = value;
+
+const char *get_var_settings_setting_audio_selected_music() {
+    return var_settings_setting_audio_selected_music;
 }
-extern bool get_var_settings_wi_fi_hide_answer_loading() {
-    return var_settings_wi_fi_hide_answer_loading;
+
+void set_var_settings_setting_audio_selected_music(const char *value) {
+    var_settings_setting_audio_selected_music = value;
 }
-extern void set_var_settings_wi_fi_hide_answer_loading(bool value) {
-    var_settings_wi_fi_hide_answer_loading = value;
+
+int32_t get_var_settings_setting_audio_alarm_volume_value() {
+    return var_settings_setting_audio_alarm_volume_value;
+}
+
+void set_var_settings_setting_audio_alarm_volume_value(int32_t value) {
+    var_settings_setting_audio_alarm_volume_value = value;
+}
+
+int32_t get_var_settings_setting_audio_auxin_volume_value() {
+    return var_settings_setting_audio_auxin_volume_value;
+}
+
+void set_var_settings_setting_audio_auxin_volume_value(int32_t value) {
+    var_settings_setting_audio_auxin_volume_value = value;
+}
+
+extern const char *get_var_main_day_today() {
+    return var_main_day_today;
+}
+
+extern void set_var_main_day_today(const char *value) {
+    var_main_day_today = value;
+}
+
+extern const char *get_var_main_day_tomorrow() {
+    return var_main_day_tomorrow;
+}
+extern void set_var_main_day_tomorrow(const char *value) {
+    var_main_day_tomorrow = value;
+}
+
+extern const char *get_var_main_day_scndnextday() {
+    return var_main_day_scndnextday;
+}
+
+extern void set_var_main_day_scndnextday(const char *value) {
+    var_main_day_scndnextday = value;
+}
+
+extern const char *get_var_main_day_thrdnextday() {
+    return var_main_day_thrdnextday;
+}
+
+extern void set_var_main_day_thrdnextday(const char *value) {
+    var_main_day_thrdnextday = value;
+}
+
+extern const char *get_var_main_temp_today() {
+    return var_main_temp_today;
+}
+
+extern void set_var_main_temp_today(const char *value) {
+    var_main_temp_today = value;
+}
+
+extern const char *get_var_main_temp_nextday() {
+    return var_main_temp_nextday;
+}
+
+extern void set_var_main_temp_nextday(const char *value) {
+    var_main_temp_nextday = value;
+}
+
+extern const char *get_var_main_temp_scndnextday() {
+    return var_main_temp_scndnextday;
+}
+
+extern void set_var_main_temp_scndnextday(const char *value) {
+    var_main_temp_scndnextday = value;
+}
+
+extern const char *get_var_main_temp_thrdnextday() {
+    return var_main_temp_thrdnextday;
+}
+
+extern void set_var_main_temp_thrdnextday(const char *value) {
+    var_main_temp_thrdnextday = value;
 }

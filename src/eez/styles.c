@@ -16,10 +16,8 @@ void apply_style_style_container(lv_obj_t *obj) {
     lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
 };
-void apply_style_style_reset_btn(lv_obj_t *obj) {
-    lv_obj_set_style_bg_color(obj, lv_color_hex(0xffff2626), LV_PART_MAIN | LV_STATE_DEFAULT);
-};
-void apply_style_style_set_btn(lv_obj_t *obj) {
-    lv_obj_set_style_bg_color(obj, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
+void apply_style_forward_backward_btn(lv_obj_t *obj) {
+    lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 };
 

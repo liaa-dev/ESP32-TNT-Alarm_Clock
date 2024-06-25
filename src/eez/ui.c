@@ -45,8 +45,8 @@ static const void *getLvglImageByName(const char *name) {
     return 0;
 }
 
-int16_t getCurrentScreen() {
-    return currentScreen+1;
+int16_t getCurrentScreenId() {
+    return currentScreen + 1;
 }
 
 void loadScreen(enum ScreensEnum screenId) {

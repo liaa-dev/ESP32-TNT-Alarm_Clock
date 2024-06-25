@@ -17,12 +17,10 @@
 extern "C" {
 #endif
 
-
-
 void ui_init();
 void ui_tick();
 
-int16_t getCurrentScreen();
+int16_t getCurrentScreenId();
 
 #if !defined(EEZ_FOR_LVGL)
 void loadScreen(enum ScreensEnum screenId);
