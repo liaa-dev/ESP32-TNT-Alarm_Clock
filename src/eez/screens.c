@@ -1220,7 +1220,7 @@ void tick_screen_set_alarm() {
                 lv_obj_set_size(obj, 192, 44);
                 lv_textarea_set_accepted_chars(obj, "01234568789:.");
                 lv_textarea_set_max_length(obj, 12);
-                lv_textarea_set_placeholder_text(obj, "00:00:00:00");
+                lv_textarea_set_placeholder_text(obj, "00:00:00.000");
                 lv_textarea_set_one_line(obj, true);
                 lv_textarea_set_password_mode(obj, false);
                 lv_obj_add_event_cb(obj, event_handler_cb_set_stopwatch_stopwatch_time_count, LV_EVENT_ALL, 0);
@@ -1328,7 +1328,6 @@ void tick_screen_set_alarm() {
                 lv_label_set_text(stopwatch_start_button_label, "START");
                 tick_value_change_obj = NULL;
             }
-            lv_obj_set_style_text_align(stopwatch_start_button_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
     }
     

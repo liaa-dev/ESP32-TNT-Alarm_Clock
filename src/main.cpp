@@ -8,6 +8,7 @@
 #include <eez/vars.h>
 #include <eez/fonts.h>
 #include <main.hpp>
+#include <eez/actions.h>
 
 TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 
@@ -115,6 +116,7 @@ void loop() {
 
 void handleLVGL() {
   ui_tick();
+  action_tick();
     
   lv_refr_now(NULL); // Tell LVGL to refresh the screen (Increases FPS to 30, Drops CPU usage to 33%)
   lv_task_handler(); // Call the LVGL task handler

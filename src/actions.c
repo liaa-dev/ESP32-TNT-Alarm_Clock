@@ -59,32 +59,35 @@ unsigned long start_time = 0;
 bool stopwatch_running = false;
 bool stopwatch_paused = false;
 extern void action_stopwatch_run_pressed(lv_event_t * e) {
-    if (!stopwatch_running) {
+    if (stopwatch_running == false) {
         start_time = millis();
         stopwatch_running = true;
         stopwatch_paused = false;
-        set_var_stopwatch_time("222");
     }else {
         stopwatch_running = false;
         stopwatch_paused = true;
-        set_var_stopwatch_time("333");
     }
 }
 extern void action_stopwatch_reset_pressed(lv_event_t * e) {
     stopwatch_running = false;
-    set_var_stopwatch_time("00:00:00.000");
+    stopwatch_paused = false;
+    set_var_stopwatch_time("");
 }
 
 void update_stopwatch() {
     if (stopwatch_running) {
-        set_var_stopwatch_time("111");
-        unsigned long current_time = millis();
-        unsigned long elapsed_time = current_time - start_time;
-
+        unsigned long elapsed_time = millis() - start_time;
+        
+        unsigned long hours = elapsed_time / 3600000;
+        unsigned long minutes = (elapsed_time % 3600000) / 60000;
+        unsigned long seconds = (elapsed_time % 60000) / 1000;
+        unsigned long milliseconds = elapsed_time % 1000;
+        
         char buffer[20];
-        sprintf(buffer, "%02d:%02d:%02d.%03d", elapsed_time / 3600000, (elapsed_time % 3600000) / 60000,
-                                               (elapsed_time % 60000) / 1000, elapsed_time % 1000);
-        const char* elapsed = buffer;
+        snprintf(buffer, sizeof(buffer), "%lu", elapsed_time);
+
+        const char *elapsed = buffer;
+        
         set_var_stopwatch_time(elapsed);
     }
 }
