@@ -34,6 +34,7 @@ typedef struct _objects_t {
     lv_obj_t *audio_change_aux_in_volume;
     lv_obj_t *audio_play_alarm_over_aux;
     lv_obj_t *audio_select_music;
+    lv_obj_t *change_date;
     lv_obj_t *date_input__day;
     lv_obj_t *date_input__month;
     lv_obj_t *date_input__year;
@@ -53,6 +54,7 @@ typedef struct _objects_t {
     lv_obj_t *obj1;
     lv_obj_t *obj10;
     lv_obj_t *obj11;
+    lv_obj_t *obj12;
     lv_obj_t *obj2;
     lv_obj_t *obj3;
     lv_obj_t *obj4;
@@ -75,6 +77,7 @@ typedef struct _objects_t {
     lv_obj_t *setting__other;
     lv_obj_t *setting__time;
     lv_obj_t *setting__wi_fi;
+    lv_obj_t *setting_time_input;
     lv_obj_t *settings_backward;
     lv_obj_t *settings_forward;
     lv_obj_t *settings_title;
@@ -86,9 +89,7 @@ typedef struct _objects_t {
     lv_obj_t *stopwatch_time_count;
     lv_obj_t *stopwatch_title;
     lv_obj_t *time_auto_set_checkbox;
-    lv_obj_t *time_change_date;
     lv_obj_t *time_change_time;
-    lv_obj_t *time_input_2;
     lv_obj_t *timer_arc;
     lv_obj_t *timer_backward;
     lv_obj_t *timer_description;

@@ -17,7 +17,7 @@ extern void action_alarm_set_pressed(lv_event_t * e);
 extern void action_alarm_reset_pressed(lv_event_t * e);
 extern void action_timer_set_pressed(lv_event_t * e);
 extern void action_timer_reset_pressed(lv_event_t * e);
-extern void action_stopwatch_start_pressed(lv_event_t * e);
+extern void action_stopwatch_run_pressed(lv_event_t * e);
 extern void action_stopwatch_reset_pressed(lv_event_t * e);
 extern void action_settings_time_selected(lv_event_t * e);
 extern void action_settings_alarm_selected(lv_event_t * e);
@@ -26,6 +26,11 @@ extern void action_settings_wifi_selected(lv_event_t * e);
 extern void action_settings_other_selected(lv_event_t * e);
 extern void action_settings_other_calibrate_pressed(lv_event_t * e);
 extern void action_settings_other_reset_pressed(lv_event_t * e);
+
+extern bool isStopwatchRunning();
+extern bool isStopwatchPaused();
+
+extern void action_tick();
 
 
 #ifdef __cplusplus
