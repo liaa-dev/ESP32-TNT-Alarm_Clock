@@ -8,11 +8,11 @@
 
 void hideSettings();
 
-extern void action_screen_go_forward(lv_event_t * e) {
+void action_screen_go_forward(lv_event_t * e) {
     if(getCurrentScreenId() == SCREEN_ID_SET_SETTINGS) loadScreen(SCREEN_ID_MAIN);
     else loadScreen(getCurrentScreenId()+1);
 }
-extern void action_screen_go_backward(lv_event_t * e) {
+void action_screen_go_backward(lv_event_t * e) {
     if(getCurrentScreenId() == SCREEN_ID_SET_SETTINGS
     && get_var_settings_hide_selection()
     && (get_var_settings_hide_setting_time()
@@ -28,52 +28,106 @@ extern void action_screen_go_backward(lv_event_t * e) {
 }
 
 /*ALARM*/
-extern void action_alarm_plus_long_pressed(lv_event_t * e) {
+void action_alarm_plus_long_pressed(lv_event_t * e) {
 
 }
-extern void action_alarm_plus_pressed(lv_event_t * e) {
+void action_alarm_plus_pressed(lv_event_t * e) {
 
 }
-extern void action_alarm_minus_long_pressed(lv_event_t * e) {
+void action_alarm_minus_long_pressed(lv_event_t * e) {
 
 }
-extern void action_alarm_minus_pressed(lv_event_t * e) {
+void action_alarm_minus_pressed(lv_event_t * e) {
 
 }
-extern void action_alarm_set_pressed(lv_event_t * e) {
+void action_alarm_set_pressed(lv_event_t * e) {
 
 }
-extern void action_alarm_reset_pressed(lv_event_t * e) {
+void action_alarm_reset_pressed(lv_event_t * e) {
 
 }
 
 /*TIMER*/
-extern void action_timer_set_pressed(lv_event_t * e) {
+unsigned long timer_start_time = 0;
+bool timer_running = false;
+bool timer_paused = false;
+void action_timer_set_pressed(lv_event_t * e) {
+    if(get_var_timer_arc_value() < 0) return;
+    if(!timer_running && !timer_paused) {
+        int hours = 0;
+        int minutes = 0;
 
+        // Get the hours and minutes from the time string
+        sscanf(get_var_timer_time(), "%02d:%02d", &hours, &minutes);
+        timer_start_time = (hours * 3600 + minutes * 60) * 1000;
+
+        timer_running = true;
+        timer_paused = false;
+    }else { // If the timer is running and the start button is pressed again, pause/resume the timer
+        if(timer_paused) { // If the timer is already paused, dont reset the time, just resume
+            timer_running = true;
+            timer_paused = false;
+        }else {
+            timer_running = false;
+            timer_paused = true;
+        }
+    }
 }
-extern void action_timer_reset_pressed(lv_event_t * e) {
+void action_timer_reset_pressed(lv_event_t * e) {
+    timer_running = false;
+    timer_paused = false;
+    set_var_timer_time("00:00"); // No placeholder text for labels
+    set_var_timer_arc_value(0);
+}
 
+char timer_buffer[7];
+void update_timer() {
+    if (timer_running) {
+        unsigned long remaining_time = timer_start_time - millis();
+        
+        unsigned long hours = remaining_time / 3600000;
+        unsigned long minutes = (remaining_time % 3600000) / 60000;
+
+        lv_snprintf(timer_buffer, sizeof(timer_buffer), "%02lu:%02lu", hours, minutes);
+        set_var_timer_time((const char*)timer_buffer);
+    }
+}
+
+bool isTimerRunning() {
+    return timer_running;
+}
+
+bool isTimerPaused() {
+    return timer_paused;
 }
 
 unsigned long start_time = 0;
 bool stopwatch_running = false;
 bool stopwatch_paused = false;
-extern void action_stopwatch_run_pressed(lv_event_t * e) {
-    if (stopwatch_running == false) {
+void action_stopwatch_start_pressed(lv_event_t * e) {
+    if (!stopwatch_running && !stopwatch_paused) {
         start_time = millis();
         stopwatch_running = true;
         stopwatch_paused = false;
-    }else {
-        stopwatch_running = false;
-        stopwatch_paused = true;
+    }else { // If the stopwatch is running and the start button is pressed again, pause/resume the stopwatch
+        if(stopwatch_paused) { // If the stopwatch is already paused, dont reset the time, just resume
+            stopwatch_running = true;
+            stopwatch_paused = false;
+        }else {
+            stopwatch_running = false;
+            stopwatch_paused = true;
+        }
     }
 }
-extern void action_stopwatch_reset_pressed(lv_event_t * e) {
+void action_stopwatch_reset_pressed(lv_event_t * e) {
     stopwatch_running = false;
     stopwatch_paused = false;
     set_var_stopwatch_time("");
 }
 
+const char *elapsed;
+char stopwatch_buffer[13]; // You have to define the buffer here, because if you try to define it in the function, it will be destroyed after the function ends therefore the value of the buffer will be destroyed
+                 // So the const char* elapsed would point to a memory location that is not valid anymore
 void update_stopwatch() {
     if (stopwatch_running) {
         unsigned long elapsed_time = millis() - start_time;
@@ -82,54 +136,58 @@ void update_stopwatch() {
         unsigned long minutes = (elapsed_time % 3600000) / 60000;
         unsigned long seconds = (elapsed_time % 60000) / 1000;
         unsigned long milliseconds = elapsed_time % 1000;
-        
-        char buffer[20];
-        snprintf(buffer, sizeof(buffer), "%lu", elapsed_time);
 
-        const char *elapsed = buffer;
+        print("Hours: "); printlong(hours);
+        print("Minutes: "); printlong(minutes);
+        print("Seconds: "); printlong(seconds);
+        print("Milliseconds: "); printlong(milliseconds);
         
-        set_var_stopwatch_time(elapsed);
+        lv_snprintf(stopwatch_buffer, sizeof(stopwatch_buffer), "%02lu:%02lu:%02lu.%03lu", hours, minutes, seconds, milliseconds);
+        //elapsed = stopwatch_buffer; // Elapsed gets initialized with the buffer
+        
+        set_var_stopwatch_time((const char*)stopwatch_buffer);
     }
 }
 
-extern bool isStopwatchRunning() {
+bool isStopwatchRunning() {
     return stopwatch_running;
 }
 
-extern bool isStopwatchPaused() {
+bool isStopwatchPaused() {
     return stopwatch_paused;
 }
 
 /*SETTINGS*/
-extern void action_settings_time_selected(lv_event_t * e) {
+void action_settings_time_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_hide_setting_time(false);
 }
-extern void action_settings_alarm_selected(lv_event_t * e) {
+void action_settings_alarm_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_hide_setting_alarm(false);
 }
-extern void action_settings_audio_selected(lv_event_t * e) {
+void action_settings_audio_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_hide_setting_audio(false);
 }
-extern void action_settings_wifi_selected(lv_event_t * e) {
+void action_settings_wifi_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_hide_setting_wifi(false);
 }
-extern void action_settings_other_selected(lv_event_t * e) {
+void action_settings_other_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_hide_setting_other(false);
 }
-extern void action_settings_other_calibrate_pressed(lv_event_t * e) {
+void action_settings_other_calibrate_pressed(lv_event_t * e) {
 
 }
-extern void action_settings_other_reset_pressed(lv_event_t * e) {
+void action_settings_other_reset_pressed(lv_event_t * e) {
 
 }
 
-extern void action_tick() {
+void action_tick() {
     update_stopwatch();
+    update_timer();
 }
 
 void hideSettings() {

@@ -5,6 +5,8 @@
 #include "vars.h"
 #include "styles.h"
 #include "ui.h"
+#include <main.hpp>
+#include "actions.h"
 
 objects_t objects;
 lv_obj_t *tick_value_change_obj;
@@ -103,6 +105,7 @@ static void event_handler_cb_set_timer_timer_reset_button(lv_event_t *e) {
     }
 }
 
+char buffer[6];
 static void event_handler_cb_set_timer_timer_arc(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     if (event == LV_EVENT_VALUE_CHANGED) {
@@ -110,6 +113,15 @@ static void event_handler_cb_set_timer_timer_arc(lv_event_t *e) {
         if (tick_value_change_obj != ta) {
             int32_t value = lv_arc_get_value(ta);
             set_var_timer_arc_value(value);
+            // Map the value of timer_arc to the range of 0 to 180min (0 to 3 hours)
+            int32_t value_mapped = lv_map(value, 0, 100, 0, 180);
+
+            // Calculate the hours and minutes from the mapped value
+            int hours = value_mapped / 60;
+            int minutes = value_mapped % 60;
+
+            lv_snprintf(buffer, sizeof(buffer), "%02d:%02d", hours, minutes);
+            set_var_timer_time((const char*)buffer);
         }
     }
 }
@@ -142,7 +154,7 @@ static void event_handler_cb_set_stopwatch_stopwatch_backward(lv_event_t *e) {
 static void event_handler_cb_set_stopwatch_stopwatch_start_button(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     if (event == LV_EVENT_RELEASED) {
-        action_stopwatch_run_pressed(e);
+        action_stopwatch_start_pressed(e);
     }
 }
 
@@ -1083,7 +1095,7 @@ void tick_screen_set_alarm() {
                 lv_obj_set_style_bg_img_src(obj, &img_arrow_left_24, LV_PART_MAIN | LV_STATE_DEFAULT);
             }
             {
-                // Timer Set Button
+                // Timer Start Button
                 lv_obj_t *obj = lv_btn_create(parent_obj);
                 objects.timer_set_button = obj;
                 lv_obj_set_pos(obj, 55, 183);
@@ -1096,9 +1108,10 @@ void tick_screen_set_alarm() {
                     lv_obj_t *parent_obj = obj;
                     {
                         lv_obj_t *obj = lv_label_create(parent_obj);
-                        lv_obj_set_pos(obj, 13, 5);
-                        lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                        lv_label_set_text(obj, "SET");
+                        lv_obj_set_pos(obj, -16, 5);
+                        lv_obj_set_size(obj, 100, LV_SIZE_CONTENT);
+                        lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                        lv_label_set_text(obj, "START");
                         apply_style_smallpixel7_32(obj);
                     }
                 }
@@ -1150,7 +1163,7 @@ void tick_screen_set_alarm() {
                         objects.timer_time_displayed = obj;
                         lv_obj_set_pos(obj, 28, 63);
                         lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                        lv_label_set_text(obj, "");
+                        lv_label_set_text(obj, "00:00");
                         apply_style_smallpixel7_48(obj);
                     }
                 }
@@ -1174,6 +1187,25 @@ void tick_screen_set_alarm() {
             if (strcmp(new_val, cur_val) != 0) {
                 tick_value_change_obj = objects.timer_time_displayed;
                 lv_label_set_text(objects.timer_time_displayed, new_val);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            lv_obj_t *timer_start_button_label = lv_obj_get_child(objects.timer_set_button, 0);
+            if(isTimerRunning()) {
+                tick_value_change_obj = objects.timer_set_button;
+                lv_obj_set_style_bg_color(objects.timer_set_button, lv_color_hex(0xFFEA00), LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_label_set_text(timer_start_button_label, "PAUSE");
+                tick_value_change_obj = NULL;
+            }else if(isTimerPaused()) {
+                tick_value_change_obj = objects.timer_set_button;
+                lv_obj_set_style_bg_color(objects.timer_set_button, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_label_set_text(timer_start_button_label, "RESUME");
+                tick_value_change_obj = NULL;
+            }else {
+                tick_value_change_obj = objects.timer_set_button;
+                lv_obj_set_style_bg_color(objects.timer_set_button, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_label_set_text(timer_start_button_label, "START");
                 tick_value_change_obj = NULL;
             }
         }
@@ -1223,12 +1255,12 @@ void tick_screen_set_alarm() {
                 lv_textarea_set_placeholder_text(obj, "00:00:00.000");
                 lv_textarea_set_one_line(obj, true);
                 lv_textarea_set_password_mode(obj, false);
-                lv_obj_add_event_cb(obj, event_handler_cb_set_stopwatch_stopwatch_time_count, LV_EVENT_ALL, 0);
                 lv_obj_clear_flag(obj, LV_OBJ_FLAG_CLICKABLE|LV_OBJ_FLAG_PRESS_LOCK|LV_OBJ_FLAG_CLICK_FOCUSABLE|LV_OBJ_FLAG_GESTURE_BUBBLE|LV_OBJ_FLAG_SNAPPABLE|LV_OBJ_FLAG_SCROLLABLE|LV_OBJ_FLAG_SCROLL_ELASTIC|LV_OBJ_FLAG_SCROLL_MOMENTUM|LV_OBJ_FLAG_SCROLL_CHAIN);
                 lv_obj_set_style_text_font(obj, &ui_font_smallpixel7_32, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_bg_color(obj, lv_color_hex(0xff000000), LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_obj_add_event_cb(obj, event_handler_cb_set_stopwatch_stopwatch_time_count, LV_EVENT_ALL, 0);
             }
             {
                 // Stopwatch Forward
@@ -1268,9 +1300,10 @@ void tick_screen_set_alarm() {
                     lv_obj_t *parent_obj = obj;
                     {
                         lv_obj_t *obj = lv_label_create(parent_obj);
-                        lv_obj_set_pos(obj, 13, 5);
-                        lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                        lv_label_set_text(obj, "RUN");
+                        lv_obj_set_pos(obj, -16, 5);
+                        lv_obj_set_size(obj, 100, LV_SIZE_CONTENT);
+                        lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                        lv_label_set_text(obj, "START");
                         apply_style_smallpixel7_32(obj);
                     }
                 }
@@ -1310,7 +1343,6 @@ void tick_screen_set_alarm() {
             }
         }
         {
-            lv_obj_t *btn = objects.stopwatch_start_button;
             lv_obj_t *stopwatch_start_button_label = lv_obj_get_child(objects.stopwatch_start_button, 0);
             if(isStopwatchRunning()) {
                 tick_value_change_obj = objects.stopwatch_start_button;

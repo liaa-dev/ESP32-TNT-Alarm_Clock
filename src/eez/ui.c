@@ -61,6 +61,7 @@ void ui_init() {
 }
 
 void ui_tick() {
+    action_tick();
     tick_screen(currentScreen);
 }
 

@@ -114,9 +114,15 @@ void loop() {
   handleLVGL();
 }
 
+void print(const char *message) {
+  Serial.println(message);
+}
+void printlong(unsigned long value) {
+  Serial.println(value);
+}
+
 void handleLVGL() {
   ui_tick();
-  action_tick();
     
   lv_refr_now(NULL); // Tell LVGL to refresh the screen (Increases FPS to 30, Drops CPU usage to 33%)
   lv_task_handler(); // Call the LVGL task handler
@@ -168,7 +174,7 @@ static void event_handler_cb_wi_fi_table_value_changed(lv_event_t * e)
 }
 
 lv_obj_t *wi_fi_table;
-extern void create_wi_fi_table() {
+void create_wi_fi_table() {
   delete_wi_fi_table();
   wi_fi_table = lv_table_create(lv_scr_act());
   int pixel_size = 30;
@@ -197,7 +203,7 @@ extern void create_wi_fi_table() {
   lv_obj_add_event_cb(wi_fi_table, event_handler_cb_wi_fi_table_value_changed, LV_EVENT_VALUE_CHANGED, NULL);
 }
 
-extern void delete_wi_fi_table() {
+void delete_wi_fi_table() {
   if(wi_fi_table != NULL) {
     lv_obj_del(wi_fi_table);
     wi_fi_table = NULL;

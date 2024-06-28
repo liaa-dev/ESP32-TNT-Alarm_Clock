@@ -21,7 +21,7 @@ static const char *var_alarm_reasons = "Wake up\nAppointment\nOther (via wifi)";
 static int32_t var_alarm_selected_reason = 0;
 static const char *var_timer_time = "00:00";
 static int32_t var_timer_arc_value = 0;
-static const char *var_stopwatch_time = "00:00:00.000";
+static const char *var_stopwatch_time = "";
 static const char *var_settings_title = "Settings";
 static bool var_settings_hide_selection = false;
 static bool var_settings_hide_setting_time = true;
@@ -98,66 +98,66 @@ void set_var_alarm_reasons(const char *value) {
     var_alarm_reasons = value;
 }
 
-extern const char *get_var_main_day_today() {
+const char *get_var_main_day_today() {
     return var_main_day_today;
 }
 
-extern void set_var_main_day_today(const char *value) {
+void set_var_main_day_today(const char *value) {
     var_main_day_today = value;
 }
 
-extern const char *get_var_main_day_tomorrow() {
+const char *get_var_main_day_tomorrow() {
     return var_main_day_tomorrow;
 }
-extern void set_var_main_day_tomorrow(const char *value) {
+void set_var_main_day_tomorrow(const char *value) {
     var_main_day_tomorrow = value;
 }
 
-extern const char *get_var_main_day_scndnextday() {
+const char *get_var_main_day_scndnextday() {
     return var_main_day_scndnextday;
 }
 
-extern void set_var_main_day_scndnextday(const char *value) {
+void set_var_main_day_scndnextday(const char *value) {
     var_main_day_scndnextday = value;
 }
 
-extern const char *get_var_main_day_thrdnextday() {
+const char *get_var_main_day_thrdnextday() {
     return var_main_day_thrdnextday;
 }
 
-extern void set_var_main_day_thrdnextday(const char *value) {
+void set_var_main_day_thrdnextday(const char *value) {
     var_main_day_thrdnextday = value;
 }
 
-extern const char *get_var_main_temp_today() {
+const char *get_var_main_temp_today() {
     return var_main_temp_today;
 }
 
-extern void set_var_main_temp_today(const char *value) {
+void set_var_main_temp_today(const char *value) {
     var_main_temp_today = value;
 }
 
-extern const char *get_var_main_temp_tomorrow() {
+const char *get_var_main_temp_tomorrow() {
     return var_main_temp_tomorrow;
 }
 
-extern void set_var_main_temp_tomorrow(const char *value) {
+void set_var_main_temp_tomorrow(const char *value) {
     var_main_temp_tomorrow = value;
 }
 
-extern const char *get_var_main_temp_scndnextday() {
+const char *get_var_main_temp_scndnextday() {
     return var_main_temp_scndnextday;
 }
 
-extern void set_var_main_temp_scndnextday(const char *value) {
+void set_var_main_temp_scndnextday(const char *value) {
     var_main_temp_scndnextday = value;
 }
 
-extern const char *get_var_main_temp_thrdnextday() {
+const char *get_var_main_temp_thrdnextday() {
     return var_main_temp_thrdnextday;
 }
 
-extern void set_var_main_temp_thrdnextday(const char *value) {
+void set_var_main_temp_thrdnextday(const char *value) {
     var_main_temp_thrdnextday = value;
 }
 
