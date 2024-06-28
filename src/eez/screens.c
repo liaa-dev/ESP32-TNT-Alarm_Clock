@@ -1196,16 +1196,19 @@ void tick_screen_set_alarm() {
                 tick_value_change_obj = objects.timer_set_button;
                 lv_obj_set_style_bg_color(objects.timer_set_button, lv_color_hex(0xFFEA00), LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_label_set_text(timer_start_button_label, "PAUSE");
+                lv_obj_clear_flag(objects.timer_arc, LV_OBJ_FLAG_CLICKABLE); // Disable the arc from being changed while the timer is running
                 tick_value_change_obj = NULL;
             }else if(isTimerPaused()) {
                 tick_value_change_obj = objects.timer_set_button;
                 lv_obj_set_style_bg_color(objects.timer_set_button, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_label_set_text(timer_start_button_label, "RESUME");
+                lv_obj_clear_flag(objects.timer_arc, LV_OBJ_FLAG_CLICKABLE); // Disable the arc from being changed while the timer is running
                 tick_value_change_obj = NULL;
             }else {
                 tick_value_change_obj = objects.timer_set_button;
                 lv_obj_set_style_bg_color(objects.timer_set_button, lv_color_hex(0xff00ff53), LV_PART_MAIN | LV_STATE_DEFAULT);
                 lv_label_set_text(timer_start_button_label, "START");
+                lv_obj_add_flag(objects.timer_arc, LV_OBJ_FLAG_CLICKABLE); // Enable the arc to be changed
                 tick_value_change_obj = NULL;
             }
         }

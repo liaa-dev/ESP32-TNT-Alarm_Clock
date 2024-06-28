@@ -49,10 +49,12 @@ void action_alarm_reset_pressed(lv_event_t * e) {
 
 /*TIMER*/
 unsigned long timer_start_time = 0;
+unsigned long timer_pause_duration = 0;
+unsigned long timer_total_duration = 0;
 bool timer_running = false;
 bool timer_paused = false;
 void action_timer_set_pressed(lv_event_t * e) {
-    if(get_var_timer_arc_value() < 0) return;
+    if(get_var_timer_arc_value() <= 0) return;
     if(!timer_running && !timer_paused) {
         int hours = 0;
         int minutes = 0;
@@ -60,14 +62,18 @@ void action_timer_set_pressed(lv_event_t * e) {
         // Get the hours and minutes from the time string
         sscanf(get_var_timer_time(), "%02d:%02d", &hours, &minutes);
         timer_start_time = (hours * 3600 + minutes * 60) * 1000;
+        timer_total_duration = timer_start_time;
+        timer_pause_duration = 0;
 
         timer_running = true;
         timer_paused = false;
     }else { // If the timer is running and the start button is pressed again, pause/resume the timer
         if(timer_paused) { // If the timer is already paused, dont reset the time, just resume
+            timer_pause_duration = millis() - timer_pause_duration;
             timer_running = true;
             timer_paused = false;
         }else {
+            timer_pause_duration = millis() - timer_pause_duration;
             timer_running = false;
             timer_paused = true;
         }
@@ -76,6 +82,9 @@ void action_timer_set_pressed(lv_event_t * e) {
 void action_timer_reset_pressed(lv_event_t * e) {
     timer_running = false;
     timer_paused = false;
+    timer_start_time = 0;
+    timer_pause_duration = 0;
+    timer_total_duration = 0;
     set_var_timer_time("00:00"); // No placeholder text for labels
     set_var_timer_arc_value(0);
 }
@@ -83,13 +92,29 @@ void action_timer_reset_pressed(lv_event_t * e) {
 char timer_buffer[7];
 void update_timer() {
     if (timer_running) {
-        unsigned long remaining_time = timer_start_time - millis();
+        print("Running!\n");
+        unsigned long remaining_time = timer_start_time - (millis() - timer_pause_duration);
+        print("Remaining time: "); printlong(remaining_time); print("\n");
+
+        // TODO: Doesnt work correctly, with the arc value
+        // Can only us it after directly starting because millis() is growing => Cant use 2 times
+
+        if(remaining_time < 10) {
+            print("The end!\n");
+            action_timer_reset_pressed(NULL); // Reset the timer
+            // TODO: Notify user that timer is done, sound or popup
+            return;
+        }
         
         unsigned long hours = remaining_time / 3600000;
         unsigned long minutes = (remaining_time % 3600000) / 60000;
+        print("Hours:"); printlong(hours); print("\n");
+        print("Minutes:"); printlong(minutes); print("\n");
 
         lv_snprintf(timer_buffer, sizeof(timer_buffer), "%02lu:%02lu", hours, minutes);
         set_var_timer_time((const char*)timer_buffer);
+        unsigned long arc_value = lv_map(remaining_time, 0, timer_total_duration, 0, 100);
+        set_var_timer_arc_value(arc_value);
     }
 }
 
