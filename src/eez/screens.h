@@ -110,6 +110,8 @@ enum ScreensEnum {
     SCREEN_ID_SET_SETTINGS = 5,
 };
 
+void create_popup(int16_t reason, const char* title, const char* text, const char** btn_txts);
+
 void create_screen_main();
 void tick_screen_main();
 

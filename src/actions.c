@@ -108,6 +108,11 @@ void action_alarm_set_pressed(lv_event_t * e) {
     set_var_main_alarm_time(get_var_alarm_time());
     set_var_main_alarm_reason(get_alarm_selected_reason(get_var_alarm_selected_reason()));
     // TODO: Notify the user that the alarm time has been set with a popup or sound
+    // TODO: Start counting till its time to ring the alarm
+    if(get_var_main_clock_time() == get_var_alarm_time()) {
+        // show popup with off and snooze button (snooze button will set the alarm time to x minutes (changeable in settings) later)
+        create_popup(0, "Alarm", "Your alarm went off!", {"Off", "Snooze"}); // Testing popup
+    }
 }
 void action_alarm_reset_pressed(lv_event_t * e) {
     set_var_main_alarm_time("04:04");

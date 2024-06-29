@@ -9,4 +9,5 @@ const ext_img_desc_t images[8] = {
     { "wifi_16", &img_wifi_16 },
     { "crepper_64x95", &img_crepper_64x95 },
     { "wifi_qrcode_128", &img_wifi_qrcode_128 },
+    { "sleepy_fox_64", &img_sleepy_fox_64 },
 };
