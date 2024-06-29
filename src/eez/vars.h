@@ -96,6 +96,8 @@ extern const char *get_var_main_alarm_time();
 extern void set_var_main_alarm_time(const char *value);
 extern const char *get_var_main_alarm_reason();
 extern void set_var_main_alarm_reason(const char *value);
+extern const char *get_var_alarm_time();
+extern void set_var_alarm_time(const char *value);
 extern const char *get_var_alarm_reasons();
 extern void set_var_alarm_reasons(const char *value);
 extern int32_t get_var_alarm_selected_reason();

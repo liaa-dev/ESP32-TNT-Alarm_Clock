@@ -15,8 +15,9 @@ static const char *var_main_temp_tomorrow = "26°C";
 static const char *var_main_temp_scndnextday = "27°C";
 static const char *var_main_temp_thrdnextday = "28°C";
 static bool var_main_is_wifi_connected = false;
-static const char *var_main_alarm_time = "06:00";
+static const char *var_main_alarm_time = "04:04";
 static const char *var_main_alarm_reason = "Wake up";
+static const char *var_alarm_time = "00:00";
 static const char *var_alarm_reasons = "Wake up\nAppointment\nOther (via wifi)";
 static int32_t var_alarm_selected_reason = 0;
 static const char *var_timer_time = "00:00";
@@ -88,6 +89,14 @@ const char *get_var_main_alarm_reason() {
 
 void set_var_main_alarm_reason(const char *value) {
     var_main_alarm_reason = value;
+}
+
+const char *get_var_alarm_time() {
+    return var_alarm_time;
+}
+
+void set_var_alarm_time(const char *value) {
+    var_alarm_time = value;
 }
 
 const char *get_var_alarm_reasons() {

@@ -24,7 +24,7 @@ static void event_handler_cb_set_alarm_alarm_time_input(lv_event_t *e) {
         lv_obj_t *ta = lv_event_get_target(e);
         if (tick_value_change_obj != ta) {
             const char *value = lv_textarea_get_text(ta);
-            set_var_main_alarm_time(value);
+            set_var_alarm_time(value);
         }
     }
 }
@@ -48,8 +48,8 @@ static void event_handler_cb_set_alarm_alarm_plus_time(lv_event_t *e) {
     if (event == LV_EVENT_PRESSED) {
         action_alarm_plus_pressed(e);
     }
-    if (event == LV_EVENT_LONG_PRESSED) {
-        action_alarm_plus_long_pressed(e);
+    if (event == LV_EVENT_LONG_PRESSED_REPEAT) {
+        action_alarm_plus_long_pressed_repeat(e);
     }
 }
 
@@ -58,8 +58,8 @@ static void event_handler_cb_set_alarm_alarm_minus_time(lv_event_t *e) {
     if (event == LV_EVENT_PRESSED) {
         action_alarm_minus_pressed(e);
     }
-    if (event == LV_EVENT_LONG_PRESSED) {
-        action_alarm_minus_long_pressed(e);
+    if (event == LV_EVENT_LONG_PRESSED_REPEAT) {
+        action_alarm_minus_long_pressed_repeat(e);
     }
 }
 
@@ -239,20 +239,20 @@ static void event_handler_cb_set_settings_setting_time_input(lv_event_t *e) {
 static void event_handler_cb_set_settings_plus_time_1(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     if (event == LV_EVENT_PRESSED) {
-        action_alarm_plus_pressed(e);
+        //action_alarm_plus_pressed(e); FIX!!! ADD ACTION
     }
-    if (event == LV_EVENT_LONG_PRESSED) {
-        action_alarm_plus_long_pressed(e);
+    if (event == LV_EVENT_LONG_PRESSED_REPEAT) {
+        //action_alarm_plus_long_pressed_repeat(e);
     }
 }
 
 static void event_handler_cb_set_settings_minus_time_1(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     if (event == LV_EVENT_PRESSED) {
-        action_alarm_minus_pressed(e);
+        //action_alarm_minus_pressed(e);
     }
-    if (event == LV_EVENT_LONG_PRESSED) {
-        action_alarm_minus_long_pressed(e);
+    if (event == LV_EVENT_LONG_PRESSED_REPEAT) {
+        //action_alarm_minus_long_pressed_repeat(e);
     }
 }
 
@@ -994,7 +994,7 @@ void create_screen_set_alarm() {
                     lv_obj_t *obj = lv_label_create(parent_obj);
                     lv_obj_set_pos(obj, -16, 5);
                     lv_obj_set_size(obj, 100, 35);
-                    lv_label_set_text(obj, "RUN");
+                    lv_label_set_text(obj, "SET");
                     apply_style_smallpixel7_32(obj);
                     lv_obj_set_style_text_font(obj, &ui_font_smallpixel7_32, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1027,7 +1027,7 @@ void create_screen_set_alarm() {
 
 void tick_screen_set_alarm() {
     {
-        const char *new_val = get_var_main_alarm_time();
+        const char *new_val = get_var_alarm_time();
         const char *cur_val = lv_textarea_get_text(objects.alarm_time_input);
         if (strcmp(new_val, cur_val) != 0) {
             tick_value_change_obj = objects.alarm_time_input;
