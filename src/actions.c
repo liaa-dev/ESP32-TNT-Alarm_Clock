@@ -34,22 +34,25 @@ int16_t alarm_minutes = 0;
 
 unsigned long plus_long_pressed_reapeat_time = 0;
 void action_alarm_plus_long_pressed_repeat(lv_event_t * e) {
-    if(millis() - plus_long_pressed_reapeat_time >= 4000){
-        print("In here 3\n");
-        if(alarm_minutes == 56) {
+    if(millis() - plus_long_pressed_reapeat_time >= 8000){
+        if(alarm_minutes >= 52) {
+            alarm_minutes = 0;
+            if(alarm_hours == 23) alarm_hours = 0;
+            else alarm_hours++;
+        }else alarm_minutes+=8;
+    }else if(millis() - plus_long_pressed_reapeat_time >= 4000){
+        if(alarm_minutes >= 56) {
             alarm_minutes = 0;
             if(alarm_hours == 23) alarm_hours = 0;
             else alarm_hours++;
         }else alarm_minutes+=4;
     }else if(millis() - plus_long_pressed_reapeat_time >= 2000){
-        print("In here 2\n");
-        if(alarm_minutes == 58) {
+        if(alarm_minutes >= 58) {
             alarm_minutes = 0;
             if(alarm_hours == 23) alarm_hours = 0;
             else alarm_hours++;
         }else alarm_minutes+=2;
     }else if(millis() - plus_long_pressed_reapeat_time < 2000) {
-        print("In here 1\n");
         if(alarm_minutes == 59) {
             alarm_minutes = 0;
             if(alarm_hours == 23) alarm_hours = 0;
@@ -61,7 +64,7 @@ void action_alarm_plus_long_pressed_repeat(lv_event_t * e) {
 }
 void action_alarm_plus_pressed(lv_event_t * e) {
     plus_long_pressed_reapeat_time = millis();
-    
+
     if(alarm_minutes == 59) {
         alarm_minutes = 0;
         if(alarm_hours == 23) alarm_hours = 0;
@@ -73,19 +76,16 @@ void action_alarm_plus_pressed(lv_event_t * e) {
 unsigned long minus_long_pressed_reapeat_time = 0;
 void action_alarm_minus_long_pressed_repeat(lv_event_t * e) {
     if(millis() - minus_long_pressed_reapeat_time >= 4000){
-        print("In here 3\n");
         if(alarm_minutes <= 0) {
             alarm_minutes = 56;
             if(alarm_hours != 0) alarm_hours--;
         }else alarm_minutes-=4;
     }else if(millis() - minus_long_pressed_reapeat_time >= 2000){
-        print("In here 2\n");
         if(alarm_minutes <= 0) {
             alarm_minutes = 58;
             if(alarm_hours != 0) alarm_hours--;
         }else alarm_minutes-=2;
     }else if(millis() - minus_long_pressed_reapeat_time < 2000) {
-        print("In here 1\n");
         if(alarm_minutes == 0) {
             alarm_minutes = 59;
             if(alarm_hours != 0) alarm_hours--;
@@ -106,6 +106,8 @@ void action_alarm_minus_pressed(lv_event_t * e) {
 }
 void action_alarm_set_pressed(lv_event_t * e) {
     set_var_main_alarm_time(get_var_alarm_time());
+    set_var_main_alarm_reason(get_alarm_selected_reason(get_var_alarm_selected_reason()));
+    // TODO: Notify the user that the alarm time has been set with a popup or sound
 }
 void action_alarm_reset_pressed(lv_event_t * e) {
     set_var_main_alarm_time("04:04");
@@ -116,7 +118,6 @@ char alarm_buffer[7];
 void update_alarm_time() {
     lv_snprintf(alarm_buffer, sizeof(alarm_buffer), "%02d:%02d", alarm_hours, alarm_minutes);
     set_var_alarm_time((const char*)alarm_buffer);
-
 }
 
 /*TIMER*/

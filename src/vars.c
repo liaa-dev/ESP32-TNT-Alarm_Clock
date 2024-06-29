@@ -1,4 +1,8 @@
 #include <eez/vars.h>
+#include <string.h>
+#include <main.hpp>
+#include <lvgl.h>
+#include <eez/screens.h>
 
 /*Warning: If the variables aren't initialized,
            the program will run in a bootloop without showing any errors!*/
@@ -18,8 +22,7 @@ static bool var_main_is_wifi_connected = false;
 static const char *var_main_alarm_time = "04:04";
 static const char *var_main_alarm_reason = "Wake up";
 static const char *var_alarm_time = "00:00";
-static const char *var_alarm_reasons = "Wake up\nAppointment\nOther (via wifi)";
-static int32_t var_alarm_selected_reason = 0;
+static const char *var_alarm_reasons = "None\nWake up\nAppointment\nOther (via wifi)";
 static const char *var_timer_time = "00:00";
 static int32_t var_timer_arc_value = 0;
 static const char *var_stopwatch_time = "";
@@ -171,11 +174,23 @@ void set_var_main_temp_thrdnextday(const char *value) {
 }
 
 int32_t get_var_alarm_selected_reason() {
-    return var_alarm_selected_reason;
+    return lv_dropdown_get_selected(objects.alarm_select_reason);
 }
 
-void set_var_alarm_selected_reason(int32_t value) {
-    var_alarm_selected_reason = value;
+void set_var_alarm_selected_reason(int32_t id) {
+    lv_dropdown_set_selected(objects.alarm_select_reason, id);
+}
+
+const char* get_alarm_selected_reason(int32_t id) {
+    char *alarm_reasons = strdup(var_alarm_reasons);
+    char *token = strtok(alarm_reasons, "\n");
+    for(int i = 0; i <= id; i++) {
+        if(i == id) {
+            print("Selected reason:"); print(token);
+            return token;
+        }else token = strtok(NULL, "\n");
+    }
+    return "404";
 }
 
 const char *get_var_timer_time() {

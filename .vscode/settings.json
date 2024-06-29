@@ -5,6 +5,7 @@
         "screens.h": "c",
         "fonts.h": "c",
         "images.h": "c",
-        "actions.h": "c"
+        "actions.h": "c",
+        "main.hpp": "c"
     }
 }

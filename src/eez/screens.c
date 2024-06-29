@@ -974,7 +974,7 @@ void create_screen_set_alarm() {
             objects.alarm_select_reason = obj;
             lv_obj_set_pos(obj, 240, 165);
             lv_obj_set_size(obj, 150, LV_SIZE_CONTENT);
-            lv_dropdown_set_options(obj, "");
+            lv_dropdown_set_options(obj, get_var_alarm_reasons());
             lv_obj_set_style_text_font(obj, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
