@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+extern void action_popup_button_pressed(lv_event_t * e);
+
 extern void action_screen_go_forward(lv_event_t * e);
 extern void action_screen_go_backward(lv_event_t * e);
 extern void action_alarm_plus_long_pressed_repeat(lv_event_t * e);

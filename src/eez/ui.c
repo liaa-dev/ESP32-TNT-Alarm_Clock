@@ -29,7 +29,7 @@ void ui_tick() {
 
 static int16_t currentScreen = -1;
 
-static lv_obj_t *getLvglObjectFromIndex(int32_t index) {
+extern lv_obj_t *getLvglObjectFromIndex(int32_t index) {
     if (index == -1) {
         return 0;
     }

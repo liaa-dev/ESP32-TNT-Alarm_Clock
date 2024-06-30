@@ -98,6 +98,7 @@ typedef struct _objects_t {
     lv_obj_t *timer_set_button;
     lv_obj_t *timer_time_displayed;
     lv_obj_t *timer_title;
+    lv_obj_t *popup;
 } objects_t;
 
 extern objects_t objects;
@@ -110,7 +111,9 @@ enum ScreensEnum {
     SCREEN_ID_SET_SETTINGS = 5,
 };
 
-void create_popup(int16_t reason, const char* title, const char* text, const char** btn_txts);
+bool exists_popup();
+void create_popup(lv_obj_t* parent, const lv_img_dsc_t* img_title, const char* message, const char * btns[2], bool btn_close, int btns_size);
+void close_popup();
 
 void create_screen_main();
 void tick_screen_main();

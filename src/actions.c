@@ -1,13 +1,21 @@
 #include <eez/actions.h>
 #include <eez/ui.h>
 #include <eez/vars.h>
+#include <eez/images.h>
+#include <eez/screens.h>
 #include <lvgl.h>
 #include <main.hpp>
 #include <stdio.h>
 #include <Arduino.h>
 
 void hideSettings();
-void update_alarm_time();
+void set_alarm_time();
+
+void action_popup_button_pressed(lv_event_t * e) {
+    if(strcmp(lv_label_get_text(lv_obj_get_child(lv_event_get_target(e), 0)), "Snooze") == 0) {
+        print("Snooze pressed\n");
+    }
+}
 
 void action_screen_go_forward(lv_event_t * e) {
     if(getCurrentScreenId() == SCREEN_ID_SET_SETTINGS) loadScreen(SCREEN_ID_MAIN);
@@ -31,6 +39,7 @@ void action_screen_go_backward(lv_event_t * e) {
 /*ALARM*/
 int16_t alarm_hours = 0;
 int16_t alarm_minutes = 0;
+bool should_create_popup = false;
 
 unsigned long plus_long_pressed_reapeat_time = 0;
 void action_alarm_plus_long_pressed_repeat(lv_event_t * e) {
@@ -60,7 +69,7 @@ void action_alarm_plus_long_pressed_repeat(lv_event_t * e) {
         }else alarm_minutes++;
     }
 
-    update_alarm_time();
+    set_alarm_time();
 }
 void action_alarm_plus_pressed(lv_event_t * e) {
     plus_long_pressed_reapeat_time = millis();
@@ -71,7 +80,7 @@ void action_alarm_plus_pressed(lv_event_t * e) {
         else alarm_hours++;
     }else alarm_minutes++;
 
-    update_alarm_time();
+    set_alarm_time();
 }
 unsigned long minus_long_pressed_reapeat_time = 0;
 void action_alarm_minus_long_pressed_repeat(lv_event_t * e) {
@@ -79,20 +88,23 @@ void action_alarm_minus_long_pressed_repeat(lv_event_t * e) {
         if(alarm_minutes <= 0) {
             alarm_minutes = 56;
             if(alarm_hours != 0) alarm_hours--;
+            else alarm_hours = 23;
         }else alarm_minutes-=4;
     }else if(millis() - minus_long_pressed_reapeat_time >= 2000){
         if(alarm_minutes <= 0) {
             alarm_minutes = 58;
             if(alarm_hours != 0) alarm_hours--;
+            else alarm_hours = 23;
         }else alarm_minutes-=2;
     }else if(millis() - minus_long_pressed_reapeat_time < 2000) {
         if(alarm_minutes == 0) {
             alarm_minutes = 59;
             if(alarm_hours != 0) alarm_hours--;
+            else alarm_hours = 23;
         }else alarm_minutes--;
     }
 
-    update_alarm_time();
+    set_alarm_time();
 }
 void action_alarm_minus_pressed(lv_event_t * e) {
     minus_long_pressed_reapeat_time = millis();
@@ -100,29 +112,37 @@ void action_alarm_minus_pressed(lv_event_t * e) {
     if(alarm_minutes == 0) {
         alarm_minutes = 59;
         if(alarm_hours != 0) alarm_hours--;
+        else alarm_hours = 23;
     }else alarm_minutes--;
 
-    update_alarm_time();
+    set_alarm_time();
 }
 void action_alarm_set_pressed(lv_event_t * e) {
     set_var_main_alarm_time(get_var_alarm_time());
     set_var_main_alarm_reason(get_alarm_selected_reason(get_var_alarm_selected_reason()));
+    should_create_popup = true;
     // TODO: Notify the user that the alarm time has been set with a popup or sound
     // TODO: Start counting till its time to ring the alarm
-    if(get_var_main_clock_time() == get_var_alarm_time()) {
-        // show popup with off and snooze button (snooze button will set the alarm time to x minutes (changeable in settings) later)
-        create_popup(0, "Alarm", "Your alarm went off!", {"Off", "Snooze"}); // Testing popup
-    }
 }
 void action_alarm_reset_pressed(lv_event_t * e) {
-    set_var_main_alarm_time("04:04");
-    set_var_alarm_time("00:00");
+    set_var_main_alarm_time("Not set");
+    set_var_alarm_time("");
+    set_var_main_alarm_reason("Not set");
+    should_create_popup = false;
 }
 
 char alarm_buffer[7];
-void update_alarm_time() {
+void set_alarm_time() {
     lv_snprintf(alarm_buffer, sizeof(alarm_buffer), "%02d:%02d", alarm_hours, alarm_minutes);
     set_var_alarm_time((const char*)alarm_buffer);
+}
+
+void update_alarm() {
+    if(strcmp(get_var_main_clock_time(), get_var_main_alarm_time()) == 0 && !exists_popup() && should_create_popup) {
+        const char* btns[2] = {"Snooze", ""};
+        create_popup(getLvglObjectFromIndex(getCurrentScreenId()-1), &img_sleepy_fox_128, "Hey! Your alarm went off.", btns, true, 2);
+        should_create_popup = false;
+    }
 }
 
 /*TIMER*/
@@ -286,6 +306,7 @@ void action_settings_other_reset_pressed(lv_event_t * e) {
 void action_tick() {
     update_stopwatch();
     update_timer();
+    update_alarm();
 }
 
 void hideSettings() {

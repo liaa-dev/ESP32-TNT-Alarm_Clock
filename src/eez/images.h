@@ -15,7 +15,7 @@ extern const lv_img_dsc_t img_arrow_left_24;
 extern const lv_img_dsc_t img_wifi_16;
 extern const lv_img_dsc_t img_crepper_64x95;
 extern const lv_img_dsc_t img_wifi_qrcode_128;
-extern const lv_img_dsc_t img_sleepy_fox_64;
+extern const lv_img_dsc_t img_sleepy_fox_128;
 
 #ifndef EXT_IMG_DESC_T
 #define EXT_IMG_DESC_T
