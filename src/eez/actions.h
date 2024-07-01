@@ -35,7 +35,7 @@ extern bool isTimerPaused();
 extern bool isStopwatchRunning();
 extern bool isStopwatchPaused();
 
-extern void action_tick();
+extern void tick_action();
 
 
 #ifdef __cplusplus

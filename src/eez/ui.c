@@ -61,7 +61,8 @@ void ui_init() {
 }
 
 void ui_tick() {
-    action_tick();
+    tick_action();
+    tick_popup();
     tick_screen(currentScreen);
 }
 

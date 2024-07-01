@@ -99,6 +99,7 @@ typedef struct _objects_t {
     lv_obj_t *timer_time_displayed;
     lv_obj_t *timer_title;
     lv_obj_t *popup;
+    lv_obj_t *popup_close_bar;
 } objects_t;
 
 extern objects_t objects;
@@ -112,8 +113,9 @@ enum ScreensEnum {
 };
 
 bool exists_popup();
-void create_popup(lv_obj_t* parent, const lv_img_dsc_t* img_title, const char* message, const char * btns[2], bool btn_close, int btns_size);
+void create_popup(lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* scnd_message, const char * btns[2], bool btn_close, int btns_size, bool auto_close, unsigned long close_after);
 void close_popup();
+void tick_popup();
 
 void create_screen_main();
 void tick_screen_main();
