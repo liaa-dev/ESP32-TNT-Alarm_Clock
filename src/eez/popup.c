@@ -10,6 +10,8 @@ bool popup_do_auto_close = false;
 lv_obj_t *popup;
 lv_obj_t *popup_close_bar;
 
+uint16_t popup_id = -1;
+
 void close_popup();
 bool exists_popup();
 
@@ -27,8 +29,10 @@ static void event_handler_cb_set_popup_button(lv_event_t *e) {
     }
 }
 
-static void create_popup(lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* scnd_message, const char* btn_txt, const lv_color_t btn_color, const bool add_btn_close, const bool do_auto_close, const unsigned long auto_close_after) {
+static void create_popup(const uint16_t id, lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* scnd_message, const char* btn_txt, const lv_color_t btn_color, const bool add_btn_close, const bool do_auto_close, const unsigned long auto_close_after) {
     if(exists_popup()) close_popup();
+
+    popup_id = id;
 
     popup_do_auto_close = do_auto_close;
     popup_auto_close_after = auto_close_after;
@@ -150,39 +154,41 @@ static void create_popup(lv_obj_t* parent, const lv_img_dsc_t* title_img, const 
                     }
                 }
                 {
-                    lv_obj_t *obj = lv_bar_create(parent_obj);
-                    popup_close_bar = obj;
-                    lv_obj_set_pos(obj, 19, 193);
-                    lv_obj_set_size(obj, 250, 5);
-                    lv_bar_set_value(obj, 100, LV_ANIM_OFF);
-                    lv_obj_add_flag(obj, LV_OBJ_FLAG_IGNORE_LAYOUT|LV_OBJ_FLAG_CLICKABLE);
-                    lv_obj_set_style_bg_opa(obj, 20, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_obj_set_style_bg_color(obj, lv_color_hex(0xff2196f3), LV_PART_MAIN | LV_STATE_DEFAULT);
+                if(do_auto_close)
+                    {
+                        lv_obj_t *obj = lv_bar_create(parent_obj);
+                        popup_close_bar = obj;
+                        lv_obj_set_pos(obj, 19, 193);
+                        lv_obj_set_size(obj, 250, 5);
+                        lv_bar_set_value(obj, 100, LV_ANIM_OFF);
+                        lv_obj_add_flag(obj, LV_OBJ_FLAG_IGNORE_LAYOUT|LV_OBJ_FLAG_CLICKABLE);
+                        lv_obj_set_style_bg_opa(obj, 20, LV_PART_MAIN | LV_STATE_DEFAULT);
+                        lv_obj_set_style_bg_color(obj, lv_color_hex(0xff2196f3), LV_PART_MAIN | LV_STATE_DEFAULT);
+                    }
                 }
             }
         }
     }
 }
 
-void create_popup_with_custom_button(lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* btn_txt, const lv_color_t btn_color, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
-    create_popup(parent, title_img, message, NULL, btn_txt, btn_color, add_close_btn, do_auto_close, auto_close_after);
+void create_popup_with_custom_button(const uint16_t id, lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* btn_txt, const lv_color_t btn_color, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
+    create_popup(id, parent, title_img, message, NULL, btn_txt, btn_color, add_close_btn, do_auto_close, auto_close_after);
 }
 
-void create_popup_with_second_message(lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* second_message, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
-    create_popup(parent, title_img, message, second_message, NULL, lv_color_black(), add_close_btn, do_auto_close, auto_close_after);
+void create_popup_with_second_message(const uint16_t id, lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* second_message, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
+    create_popup(id, parent, title_img, message, second_message, NULL, lv_color_black(), add_close_btn, do_auto_close, auto_close_after);
 }
 
-void create_popup_with_custom_button_and_second_message(lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* second_message, const char* btn_txt, const lv_color_t btn_color, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
-    create_popup(parent, title_img, message, second_message, btn_txt, btn_color, add_close_btn, do_auto_close, auto_close_after);
+void create_popup_with_custom_button_and_second_message(const uint16_t id, lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const char* second_message, const char* btn_txt, const lv_color_t btn_color, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
+    create_popup(id, parent, title_img, message, second_message, btn_txt, btn_color, add_close_btn, do_auto_close, auto_close_after);
 }
 
-void create_popup_with_message(lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
-    create_popup(parent, title_img, message, NULL, NULL, lv_color_black(), add_close_btn, do_auto_close, auto_close_after);
+void create_popup_with_message(const uint16_t id, lv_obj_t* parent, const lv_img_dsc_t* title_img, const char* message, const bool add_close_btn, const bool do_auto_close, const unsigned long auto_close_after) {
+    create_popup(id, parent, title_img, message, NULL, NULL, lv_color_black(), add_close_btn, do_auto_close, auto_close_after);
 }
 
 void close_popup() {
     if(popup != NULL) {
-        print("called!");
         popup_auto_close_after = 0;
         popup_do_auto_close = false;
         popup_start_time = 0;
@@ -209,4 +215,8 @@ void tick_popup() {
 
         lv_bar_set_value(popup_close_bar, lv_map(popup_auto_close_after - (millis() - popup_start_time), 0, popup_auto_close_after, 0, 100), LV_ANIM_ON);
     }
+}
+
+const uint16_t get_current_popup_id() {
+    return popup_id;
 }

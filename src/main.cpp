@@ -17,6 +17,8 @@ lv_disp_t *disp;
 static lv_disp_draw_buf_t disp_buf;
 lv_indev_t *indev;
 
+uint16_t calData[5];
+
 void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p);
 void my_touchpad_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 void lvgl_debug_print(const char * buf);
@@ -52,7 +54,11 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
   tft.setRotation(3);
 
-  uint16_t calData[5] = { 278, 3616, 296, 3477, 1 };
+  calData[0] = 278;
+  calData[1] = 3616;
+  calData[2] = 296;
+  calData[3] = 3477;
+  calData[4] = 1;
   tft.setTouch(calData);
 
   Serial.println("Initializing LVGL...");
@@ -256,3 +262,13 @@ void lvgl_debug_print(const char * buf) {
   Serial.flush();
 }
 #endif
+
+bool calibrate_touch() {
+  tft.calibrateTouch(calData, TFT_MAGENTA, TFT_BLACK, 15);
+  tft.setTouch(calData);
+  return true;
+}
+
+void restart_esp() {
+  ESP.restart();
+}
