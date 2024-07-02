@@ -13,6 +13,7 @@ void hideSettings();
 void set_alarm_time();
 bool isPopupButtonPressed(lv_event_t * e, const char* btn_text);
 bool isPopupOpenWithId(const uint16_t id);
+void listDir(const char * dirpath);
 
 void action_screen_go_forward(lv_event_t * e) {
     if(getCurrentScreenId() == SCREEN_ID_SET_SETTINGS) loadScreen(SCREEN_ID_MAIN);
@@ -39,31 +40,42 @@ int16_t alarm_minutes = 0;
 bool should_create_popup = false;
 
 void action_popup_button_pressed(lv_event_t * e) {
-    if(isPopupOpenWithId(1)) {
-        if(isPopupButtonPressed(e, "Snooze")) {
-            if(alarm_minutes == 59) {
-            alarm_minutes = get_var_settings_setting_alarm_selected_repeat_after();
-            if(alarm_hours == 23) alarm_hours = 0;
-            else alarm_hours++;
-            }else alarm_minutes+=get_var_settings_setting_alarm_selected_repeat_after();
+    switch(get_current_popup_id()) {
+        case POPUP_ID_SUCCESS:
+            break;
+        case POPUP_ID_FAILED:
+            break;
+        case POPUP_ID_ALARM_TRIGGERED:
+            if(isPopupButtonPressed(e, "Snooze")) {
+                if(alarm_minutes == 59) {
+                alarm_minutes = get_var_settings_setting_alarm_selected_repeat_after();
+                if(alarm_hours == 23) alarm_hours = 0;
+                else alarm_hours++;
+                }else alarm_minutes+=get_var_settings_setting_alarm_selected_repeat_after();
 
-            set_alarm_time();
-            action_alarm_set_pressed(e);
-        }
-    }
-    if(isPopupOpenWithId(3) && isPopupButtonPressed(e, "Yes")) {
-        if(isPopupButtonPressed(e, "Yes")) restart_esp();
-    }
-    if(isPopupOpenWithId(2)) {
-        if(isPopupButtonPressed(e, "Yes")) {
-            if(calibrate_touch()) {
-                close_popup();
-                print("In here!");
-                //create_popup_with_message(4, getLvglObjectFromIndex(SCREEN_ID_SET_SETTINGS-1), &img_success_64, "Screen calibrated!", true, true, 5000);
+                set_alarm_time();
+                action_alarm_set_pressed(e);
             }
-        }
+            close_popup();
+            break;
+        case POPUP_ID_TIMER_TRIGGERED:
+            break;
+        case POPUP_ID_STOPWATCH_TRIGGERED:
+            break;
+        case POPUP_ID_SETTING_OTHER_CALIBRATE_TOUCH:
+            if(isPopupButtonPressed(e, "Yes")) {
+                close_popup();
+                calibrate_touch();
+                char buffer[33];
+                lv_snprintf(buffer, sizeof(buffer), "1: %u, 2: %u, 3: %u, 4: %u", calData[0], calData[1], calData[2], calData[3]);
+                create_popup_with_second_message(POPUP_ID_SUCCESS, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_success_64, "Screen calibrated!", (const char*)buffer, true, true, 5000);
+                // TODO: User Feedback successful with sound
+            }
+            break;
+        case POPUP_ID_SETTING_OTHER_RESET:
+            if(isPopupButtonPressed(e, "Yes")) restart_esp();
+            break;
     }
-    close_popup();
 }
 
 unsigned long plus_long_pressed_reapeat_time = 0;
@@ -147,7 +159,8 @@ void action_alarm_set_pressed(lv_event_t * e) {
     set_var_main_alarm_reason(get_alarm_selected_reason(get_var_alarm_selected_reason()));
     should_create_popup = true;
     // TODO: Notify the user that the alarm time has been set with a popup or sound
-    create_popup_with_message(0, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_success_64, "Alarm successfully set!", true, true, 5000);
+    create_popup_with_message(POPUP_ID_SUCCESS, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_success_64, "Alarm successfully set!", true, true, 5000);
+    listDir("S:/testdir");
 }
 void action_alarm_reset_pressed(lv_event_t * e) {
     set_var_main_alarm_time("Not set");
@@ -165,7 +178,7 @@ void set_alarm_time() {
 
 void update_alarm() {
     if(strcmp(get_var_main_clock_time(), get_var_main_alarm_time()) == 0 && !exists_popup() && should_create_popup) {
-        create_popup_with_custom_button_and_second_message(1, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_sleepy_fox_128, "Hey! Your alarm went off.", get_alarm_selected_reason(get_var_alarm_selected_reason()), "Snooze", lv_color_hex(0x5f00ff), true, true, 5000);
+        create_popup_with_custom_button_and_second_message(POPUP_ID_ALARM_TRIGGERED, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_sleepy_fox_128, "Hey! Your alarm went off.", get_alarm_selected_reason(get_var_alarm_selected_reason()), "Snooze", lv_color_hex(0x5f00ff), true, true, 5000);
         should_create_popup = false;
     }
 }
@@ -224,7 +237,8 @@ void update_timer() {
         if(remaining_time < 200) {
             print("The end!\n");
             action_timer_reset_pressed(NULL); // Reset the timer
-            // TODO: Notify user that timer is done, sound or popup
+            // TODO: Notify user that timer is done, with sound
+            create_popup_with_message(POPUP_ID_TIMER_TRIGGERED, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_timer_done_64, "Timer finished!", true, true, 5000);
             return;
         }
         
@@ -311,6 +325,7 @@ void action_settings_alarm_selected(lv_event_t * e) {
 }
 void action_settings_audio_selected(lv_event_t * e) {
     hideSettings();
+    
     set_var_settings_hide_setting_audio(false);
 }
 void action_settings_wifi_selected(lv_event_t * e) {
@@ -322,10 +337,10 @@ void action_settings_other_selected(lv_event_t * e) {
     set_var_settings_hide_setting_other(false);
 }
 void action_settings_other_calibrate_pressed(lv_event_t * e) {
-    create_popup_with_custom_button(2, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_warning_64, "Calibrate the screen?", "Yes", lv_color_hex(0x00ff53), true, false, 0);
+    create_popup_with_custom_button(POPUP_ID_SETTING_OTHER_CALIBRATE_TOUCH, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_warning_64, "Calibrate the screen?", "Yes", lv_color_hex(0x00ff53), true, false, 0);
 }
 void action_settings_other_reset_pressed(lv_event_t * e) {
-    create_popup_with_custom_button_and_second_message(3, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_warning_64, "Confirm device reset?", "All settings will be lost.", "Yes", lv_color_hex(0xff2626), true, false, 0);
+    create_popup_with_custom_button_and_second_message(POPUP_ID_SETTING_OTHER_RESET, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_warning_64, "Confirm device reset?", "All settings will be lost.", "Yes", lv_color_hex(0xff2626), true, false, 0);
 }
 
 void tick_action() {
@@ -357,4 +372,31 @@ bool isPopupButtonPressed(lv_event_t * e, const char* btn_text) {
         return true;
     }
     return false;
+}
+
+void listDir(const char * dirpath) {
+    print("Listing directory:"); print("E:testdir");
+
+    lv_fs_dir_t dir;
+    lv_fs_res_t res;
+    res = lv_fs_dir_open(&dir, "E:testdir");
+    if(res != LV_FS_RES_OK) print("Error opening directory");
+
+    char fn[256];
+    while(1) {
+        res = lv_fs_dir_read(&dir, fn);
+        if(res != LV_FS_RES_OK) {
+            print("Error reading directory");
+            break;
+        }
+
+        /*fn is empty, if not more files to read*/
+        if(strlen(fn) == 0) {
+            break;
+        }
+
+        printf("%s\n", fn);
+    }
+
+    lv_fs_dir_close(&dir);
 }

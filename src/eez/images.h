@@ -19,6 +19,7 @@ extern const lv_img_dsc_t img_sleepy_fox_128;
 extern const lv_img_dsc_t img_success_64;
 extern const lv_img_dsc_t img_failed_64;
 extern const lv_img_dsc_t img_warning_64;
+extern const lv_img_dsc_t img_timer_done_64;
 
 #ifndef EXT_IMG_DESC_T
 #define EXT_IMG_DESC_T

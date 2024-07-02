@@ -17,8 +17,6 @@ lv_disp_t *disp;
 static lv_disp_draw_buf_t disp_buf;
 lv_indev_t *indev;
 
-uint16_t calData[5];
-
 void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p);
 void my_touchpad_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 void lvgl_debug_print(const char * buf);
@@ -35,6 +33,68 @@ When an alarm is played, we will set the mute pin of the audio amplifier to HIGH
 The alarm sound will be played.
 After the alarm ends, the mute pin will be reset to its original state.
 Important: This behavior will only occur if the "Alarm over AUX" function is enabled to prevent signal mixing.*/
+
+void *sd_dir_open(lv_fs_drv_t *drv, const char *dirpath) {
+  LV_UNUSED(drv);
+
+  File root = SD.open(dirpath);
+  if (!root) {
+    Serial.println("Failed to open directory!");
+    return NULL;
+  }
+
+  if (!root.isDirectory()) {
+    Serial.println("Not a directory!");
+    return NULL;
+  }
+
+  File *lroot = new File{ root };
+
+  return (void *)lroot;
+}
+
+void listDir(const char * dirpath) {
+    print("Listing directory:"); print("E:testdir");
+
+    lv_fs_dir_t dir;
+    lv_fs_res_t res;
+    res = lv_fs_dir_open(&dir, "E:/images");
+    if(res != LV_FS_RES_OK) print("Error opening directory");
+
+    char fn[256];
+    while(1) {
+        res = lv_fs_dir_read(&dir, fn);
+        if(res != LV_FS_RES_OK) {
+            print("Error reading directory");
+            break;
+        }
+
+        /*fn is empty, if not more files to read*/
+        if(strlen(fn) == 0) {
+            break;
+        }
+
+        printf("%s\n", fn);
+    }
+
+    lv_fs_dir_close(&dir);
+}
+
+void testfile() {
+  lv_fs_file_t f;
+  lv_fs_res_t res;
+  res = lv_fs_open(&f, "E:testdir/hi.txt", LV_FS_MODE_RD);
+  if(res != LV_FS_RES_OK) print("error opening file");
+  else print("file opened");
+
+  uint32_t read_num;
+  uint8_t buf[8];
+  res = lv_fs_read(&f, buf, 8, &read_num);
+  if(res != LV_FS_RES_OK || read_num != 8) print("error reading file");
+  else print("read ok!");
+
+  lv_fs_close(&f);
+}
 
 void setup() {
   pinMode(TFT_BL, OUTPUT); // controlable with analogWrite(TFT_BL, 0-255);
@@ -95,21 +155,24 @@ void setup() {
 
   Serial.println("LVGL initialized!");
 
-  /*Serial.println("Initializing SD card...");
+  Serial.println("Initializing SD card...");
   if (!SD.begin(SD_CS)) {
     Serial.println(F("SD Card failed, or not present! Please press RESET to try again!"));
     return;
-  }*/
+  }
 
+  lv_fs_fatfs_init();
+  testfile();
+  if(lv_fs_is_ready('E')) print("ready");
+  else print("not ready");
   Serial.println("SD card initialized!");
+  listDir("Hi");
 
   Serial.println("Initializing WiFi...");
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
   Serial.println("WiFi initialized!");
-
-  //lv_fs_fatfs_init();
 
   ui_init();
 
@@ -124,6 +187,9 @@ void print(const char *message) {
   Serial.println(message);
 }
 void printlong(unsigned long value) {
+  Serial.println(value);
+}
+void printuint16t(uint16_t value) {
   Serial.println(value);
 }
 
@@ -263,10 +329,9 @@ void lvgl_debug_print(const char * buf) {
 }
 #endif
 
-bool calibrate_touch() {
+void calibrate_touch() {
   tft.calibrateTouch(calData, TFT_MAGENTA, TFT_BLACK, 15);
   tft.setTouch(calData);
-  return true;
 }
 
 void restart_esp() {

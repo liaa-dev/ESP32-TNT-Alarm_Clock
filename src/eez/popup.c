@@ -33,9 +33,9 @@ static void create_popup(const uint16_t id, lv_obj_t* parent, const lv_img_dsc_t
     if(exists_popup()) close_popup();
 
     popup_id = id;
-
     popup_do_auto_close = do_auto_close;
     popup_auto_close_after = auto_close_after;
+
     lv_obj_t *obj = lv_obj_create(parent);
     popup = obj;
     lv_obj_set_pos(obj, 0, 0);
@@ -112,7 +112,8 @@ static void create_popup(const uint16_t id, lv_obj_t* parent, const lv_img_dsc_t
                             {
                                 lv_obj_t *parent_obj = obj;
                                 {
-                                    if(btn_txt != NULL) {
+                                    if(btn_txt != NULL)
+                                    {
                                         /* Custom Button */
                                         lv_obj_t *obj = lv_btn_create(parent_obj);
                                         lv_obj_set_size(obj, 100, 50);
@@ -194,6 +195,7 @@ void close_popup() {
         popup_start_time = 0;
         lv_obj_del(popup);
         popup = NULL;
+        print("Closed!");
     }
 }
 

@@ -13,4 +13,5 @@ const ext_img_desc_t images[8] = {
     { "success_64", &img_success_64 },
     { "failed_64", &img_failed_64 },
     { "warning_64", &img_warning_64 },
+    { "timer_done_64", &img_timer_done_64 },
 };
