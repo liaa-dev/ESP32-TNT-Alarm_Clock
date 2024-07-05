@@ -41,7 +41,8 @@ static int32_t var_settings_setting_time_selected_year = 0;
 static int32_t var_settings_setting_alarm_selected_repeats = 0;
 static int32_t var_settings_setting_alarm_selected_repeat_after = 5;
 static bool var_settings_setting_audio_checked_alarm_over_aux = true;
-static const char *var_settings_setting_audio_selected_music = "";
+static int32_t var_settings_setting_audio_selected_music = 0;
+static const char* var_settings_setting_audio_music_selection = "None\n";
 static int32_t var_settings_setting_audio_alarm_volume_value = 50;
 static int32_t var_settings_setting_audio_auxin_volume_value = 50;
 
@@ -337,12 +338,20 @@ void set_var_settings_setting_audio_checked_alarm_over_aux(bool value) {
     var_settings_setting_audio_checked_alarm_over_aux = value;
 }
 
-const char *get_var_settings_setting_audio_selected_music() {
+int32_t get_var_settings_setting_audio_selected_music() {
     return var_settings_setting_audio_selected_music;
 }
 
-void set_var_settings_setting_audio_selected_music(const char *value) {
+void set_var_settings_setting_audio_selected_music(int32_t value) {
     var_settings_setting_audio_selected_music = value;
+}
+
+const char *get_var_settings_setting_audio_music_selection() {
+    return var_settings_setting_audio_music_selection;
+}
+
+void set_var_settings_setting_audio_music_selection(const char *value) {
+    var_settings_setting_audio_music_selection = value;
 }
 
 int32_t get_var_settings_setting_audio_alarm_volume_value() {

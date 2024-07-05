@@ -9,6 +9,8 @@
 #include <eez/fonts.h>
 #include <main.hpp>
 #include <eez/actions.h>
+#include <FS.h>
+#include <string>
 
 TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 
@@ -33,68 +35,6 @@ When an alarm is played, we will set the mute pin of the audio amplifier to HIGH
 The alarm sound will be played.
 After the alarm ends, the mute pin will be reset to its original state.
 Important: This behavior will only occur if the "Alarm over AUX" function is enabled to prevent signal mixing.*/
-
-void *sd_dir_open(lv_fs_drv_t *drv, const char *dirpath) {
-  LV_UNUSED(drv);
-
-  File root = SD.open(dirpath);
-  if (!root) {
-    Serial.println("Failed to open directory!");
-    return NULL;
-  }
-
-  if (!root.isDirectory()) {
-    Serial.println("Not a directory!");
-    return NULL;
-  }
-
-  File *lroot = new File{ root };
-
-  return (void *)lroot;
-}
-
-void listDir(const char * dirpath) {
-    print("Listing directory:"); print("E:testdir");
-
-    lv_fs_dir_t dir;
-    lv_fs_res_t res;
-    res = lv_fs_dir_open(&dir, "E:/images");
-    if(res != LV_FS_RES_OK) print("Error opening directory");
-
-    char fn[256];
-    while(1) {
-        res = lv_fs_dir_read(&dir, fn);
-        if(res != LV_FS_RES_OK) {
-            print("Error reading directory");
-            break;
-        }
-
-        /*fn is empty, if not more files to read*/
-        if(strlen(fn) == 0) {
-            break;
-        }
-
-        printf("%s\n", fn);
-    }
-
-    lv_fs_dir_close(&dir);
-}
-
-void testfile() {
-  lv_fs_file_t f;
-  lv_fs_res_t res;
-  res = lv_fs_open(&f, "E:testdir/hi.txt", LV_FS_MODE_RD);
-  if(res != LV_FS_RES_OK) print("error opening file");
-  else print("file opened");
-
-  uint32_t read_num;
-  uint8_t buf[8];
-  res = lv_fs_read(&f, buf, 8, &read_num);
-  if(res != LV_FS_RES_OK || read_num != 8) print("error reading file");
-  else print("read ok!");
-
-  lv_fs_close(&f);
-}
 
 void setup() {
   pinMode(TFT_BL, OUTPUT); // controlable with analogWrite(TFT_BL, 0-255);
@@ -160,13 +100,9 @@ void setup() {
     Serial.println(F("SD Card failed, or not present! Please press RESET to try again!"));
     return;
   }
-
   lv_fs_fatfs_init();
-  testfile();
-  if(lv_fs_is_ready('E')) print("ready");
-  else print("not ready");
+
   Serial.println("SD card initialized!");
-  listDir("Hi");
 
   Serial.println("Initializing WiFi...");
   WiFi.mode(WIFI_STA);
@@ -328,6 +264,33 @@ void lvgl_debug_print(const char * buf) {
   Serial.flush();
 }
 #endif
+
+// Lists all files of an directory as a string differentiated by "\n"
+// e.g. "file1\nfile2\nfile3\n"
+const char* listed_files = get_var_settings_setting_audio_music_selection();
+const char* fs_dir_list_as_string(const char * dir_path) {
+    File root = SD.open(dir_path);
+    if (!root) {
+        Serial.println("Failed to open directory");
+    }
+    if (!root.isDirectory()) {
+        Serial.println("Not a directory");
+    }
+
+    File file = root.openNextFile();
+    std::string files;
+    while (file) {
+        if (!file.isDirectory()) {
+          files += std::string(file.name()) + "\n";
+          print(files.c_str());
+        }
+        file = root.openNextFile();
+    }
+    listed_files = files.c_str();
+    return listed_files;
+}
+
+
 
 void calibrate_touch() {
   tft.calibrateTouch(calData, TFT_MAGENTA, TFT_BLACK, 15);

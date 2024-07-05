@@ -160,7 +160,6 @@ void action_alarm_set_pressed(lv_event_t * e) {
     should_create_popup = true;
     // TODO: Notify the user that the alarm time has been set with a popup or sound
     create_popup_with_message(POPUP_ID_SUCCESS, getLvglObjectFromIndex(getCurrentScreenId()-1), &img_success_64, "Alarm successfully set!", true, true, 5000);
-    listDir("S:/testdir");
 }
 void action_alarm_reset_pressed(lv_event_t * e) {
     set_var_main_alarm_time("Not set");
@@ -325,9 +324,13 @@ void action_settings_alarm_selected(lv_event_t * e) {
 }
 void action_settings_audio_selected(lv_event_t * e) {
     hideSettings();
-    
     set_var_settings_hide_setting_audio(false);
 }
+
+void action_settings_audio_music_selection_pressed(lv_event_t * e) {
+    set_var_settings_setting_audio_music_selection(fs_dir_list_as_string("/testdir"));
+}
+
 void action_settings_wifi_selected(lv_event_t * e) {
     hideSettings();
     set_var_settings_hide_setting_wifi(false);
@@ -372,31 +375,4 @@ bool isPopupButtonPressed(lv_event_t * e, const char* btn_text) {
         return true;
     }
     return false;
-}
-
-void listDir(const char * dirpath) {
-    print("Listing directory:"); print("E:testdir");
-
-    lv_fs_dir_t dir;
-    lv_fs_res_t res;
-    res = lv_fs_dir_open(&dir, "E:testdir");
-    if(res != LV_FS_RES_OK) print("Error opening directory");
-
-    char fn[256];
-    while(1) {
-        res = lv_fs_dir_read(&dir, fn);
-        if(res != LV_FS_RES_OK) {
-            print("Error reading directory");
-            break;
-        }
-
-        /*fn is empty, if not more files to read*/
-        if(strlen(fn) == 0) {
-            break;
-        }
-
-        printf("%s\n", fn);
-    }
-
-    lv_fs_dir_close(&dir);
 }

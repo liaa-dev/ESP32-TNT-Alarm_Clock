@@ -323,6 +323,24 @@ static void event_handler_cb_set_settings_audio_play_alarm_over_aux(lv_event_t *
     }
 }
 
+static void event_handler_cb_set_settings_audio_select_music(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    if (event == LV_EVENT_VALUE_CHANGED) {
+        lv_obj_t *ta = lv_event_get_target(e);
+        if (tick_value_change_obj != ta) {
+            int32_t value = lv_dropdown_get_selected(ta);
+            set_var_settings_setting_audio_selected_music(value);
+        }
+    }
+    if(event == LV_EVENT_CLICKED) {
+        lv_obj_t *ta = lv_event_get_target(e);
+        if (tick_value_change_obj != ta) {
+            action_settings_audio_music_selection_pressed(e);
+        }
+    
+    }
+}
+
 static void event_handler_cb_set_settings_audio_alarm_volume_slider(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     if (event == LV_EVENT_VALUE_CHANGED) {
@@ -1806,7 +1824,8 @@ void tick_screen_set_alarm() {
                         objects.audio_select_music = obj;
                         lv_obj_set_pos(obj, 4, -14);
                         lv_obj_set_size(obj, 160, LV_SIZE_CONTENT);
-                        lv_dropdown_set_options(obj, "");
+                        lv_dropdown_set_options(obj, get_var_settings_setting_audio_music_selection());
+                        lv_obj_add_event_cb(obj, event_handler_cb_set_settings_audio_select_music, LV_EVENT_ALL, 0);
                         lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                     }
                     {
@@ -2072,6 +2091,17 @@ void tick_screen_set_alarm() {
                 tick_value_change_obj = objects.audio_play_alarm_over_aux;
                 if (new_val) lv_obj_add_state(objects.audio_play_alarm_over_aux, LV_STATE_CHECKED);
                 else lv_obj_clear_state(objects.audio_play_alarm_over_aux, LV_STATE_CHECKED);
+                tick_value_change_obj = NULL;
+            }
+        }
+        {
+            const char *new_val = get_var_settings_setting_audio_music_selection();
+            const char *cur_val = lv_dropdown_get_options(objects.audio_select_music);
+            if (strcmp(new_val, cur_val) != 0) {
+                tick_value_change_obj = objects.audio_select_music;
+                lv_dropdown_close(objects.audio_select_music); // let the data load into the dropdown menu
+                lv_dropdown_set_options(objects.audio_select_music, new_val);
+                lv_dropdown_open(objects.audio_select_music);
                 tick_value_change_obj = NULL;
             }
         }

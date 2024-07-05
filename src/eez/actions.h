@@ -24,6 +24,7 @@ extern void action_stopwatch_reset_pressed(lv_event_t * e);
 extern void action_settings_time_selected(lv_event_t * e);
 extern void action_settings_alarm_selected(lv_event_t * e);
 extern void action_settings_audio_selected(lv_event_t * e);
+extern void action_settings_audio_music_selection_pressed(lv_event_t * e);
 extern void action_settings_wifi_selected(lv_event_t * e);
 extern void action_settings_other_selected(lv_event_t * e);
 extern void action_settings_other_calibrate_pressed(lv_event_t * e);
