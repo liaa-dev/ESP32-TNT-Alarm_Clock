@@ -11,6 +11,7 @@
 #include <eez/actions.h>
 #include <FS.h>
 #include <string>
+#include <time.h>
 
 TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 
@@ -23,6 +24,10 @@ void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *c
 void my_touchpad_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 void lvgl_debug_print(const char * buf);
 void handleLVGL();
+void shortenMonthName(char* month);
+
+const char* ssid = "Test"; // TODO: read data from sd card
+const char* password = "12345678";
 
 //TODO
 /*Notice:
@@ -106,9 +111,12 @@ void setup() {
 
   Serial.println("Initializing WiFi...");
   WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
+  WiFi.begin(ssid, password);
   delay(100);
   Serial.println("WiFi initialized!");
+
+  Serial.println("Initializing and getting time");
+  configTime(3600*2, 3600*2, "pool.ntp.org", "time.nist.gov");
 
   ui_init();
 
@@ -116,6 +124,28 @@ void setup() {
 }
 
 void loop() {
+  if(get_var_settings_setting_time_checked_autoset()) {
+    struct tm timeinfo;
+    if(!getLocalTime(&timeinfo)) {
+      Serial.println("Failed to obtain time");
+      return;
+    }
+    char time[6];
+    strftime(time, 6, "%H:%M", &timeinfo);
+    set_var_main_clock_time((const char*)time);
+    char seconds[3];
+    strftime(seconds, 3, "%S", &timeinfo);
+    set_var_main_clock_seconds((const char*)seconds);
+    char date[20];
+    char month[10];
+    strftime(month, 10, "%B", &timeinfo);
+    shortenMonthName(month);
+    snprintf(date, sizeof(date), "%d, %d %d", timeinfo.tm_wday, month, timeinfo.tm_mday);
+    set_var_main_date((const char*)date);
+  }else {
+    set_var_main_clock_time(get_var_settings_setting_time_new_time());
+    set_var_main_date(get_var_settings_setting_time_selected_date());
+  }
   handleLVGL();
 }
 
@@ -290,7 +320,33 @@ const char* fs_dir_list_as_string(const char * dir_path) {
     return listed_files;
 }
 
-
+void shortenMonthName(char* month) {
+  if (strcmp(month, "January") == 0) {
+    strcpy(month, "Jan");
+  } else if (strcmp(month, "February") == 0) {
+    strcpy(month, "Feb");
+  } else if (strcmp(month, "March") == 0) {
+    strcpy(month, "Mar");
+  } else if (strcmp(month, "April") == 0) {
+    strcpy(month, "Apr");
+  } else if (strcmp(month, "May") == 0) {
+    strcpy(month, "May");
+  } else if (strcmp(month, "June") == 0) {
+    strcpy(month, "Jun");
+  } else if (strcmp(month, "July") == 0) {
+    strcpy(month, "Jul");
+  } else if (strcmp(month, "August") == 0) {
+    strcpy(month, "Aug");
+  } else if (strcmp(month, "September") == 0) {
+    strcpy(month, "Sep");
+  } else if (strcmp(month, "October") == 0) {
+    strcpy(month, "Oct");
+  } else if (strcmp(month, "November") == 0) {
+    strcpy(month, "Nov");
+  } else if (strcmp(month, "December") == 0) {
+    strcpy(month, "Dec");
+  }
+}
 
 void calibrate_touch() {
   tft.calibrateTouch(calData, TFT_MAGENTA, TFT_BLACK, 15);

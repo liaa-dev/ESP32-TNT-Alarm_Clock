@@ -148,6 +148,8 @@ extern void set_var_settings_setting_audio_alarm_volume_value(int32_t value);
 extern int32_t get_var_settings_setting_audio_auxin_volume_value();
 extern void set_var_settings_setting_audio_auxin_volume_value(int32_t value);
 
+const char* get_var_settings_setting_time_selected_date();
+
 
 #ifdef __cplusplus
 }
