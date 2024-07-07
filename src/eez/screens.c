@@ -409,12 +409,14 @@ void create_screen_main() {
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
                     objects.obj0 = obj;
-                    lv_obj_set_pos(obj, 5, -8);
-                    lv_obj_set_size(obj, 271, 74);
+                    lv_obj_set_pos(obj, -10, -8);
+                    lv_obj_set_size(obj, 290, 74);
                     lv_label_set_text(obj, "");
                     lv_obj_set_style_text_font(obj, &ui_font_smallpixel7_num_148, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_letter_space(obj, -1, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_label_set_long_mode(obj, LV_LABEL_LONG_CLIP);
                 }
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);

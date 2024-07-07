@@ -12,6 +12,7 @@
 #include <FS.h>
 #include <string>
 #include <time.h>
+#include "webserver.hpp"
 
 TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 
@@ -26,7 +27,7 @@ void lvgl_debug_print(const char * buf);
 void handleLVGL();
 void shortenMonthName(char* month);
 
-const char* ssid = "Test"; // TODO: read data from sd card
+const char* ssid = "DESKTOP-FF8SIT2 0448"; // TODO: read data from sd card
 const char* password = "12345678";
 
 //TODO
@@ -110,24 +111,29 @@ void setup() {
   Serial.println("SD card initialized!");
 
   Serial.println("Initializing WiFi...");
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.mode(WIFI_AP_STA);
+  webserver_init();
+  delay(100);
+  //WiFi.begin(ssid, password);
   delay(100);
   Serial.println("WiFi initialized!");
 
   Serial.println("Initializing and getting time");
-  configTime(3600*2, 3600*2, "pool.ntp.org", "time.nist.gov");
+  configTime(0, 3600*2, "pool.ntp.org", "time.nist.gov");
 
   ui_init();
 
   handleLVGL();
+
+  Serial.println(WiFi.softAPIP());
 }
 
 void loop() {
-  if(get_var_settings_setting_time_checked_autoset()) {
+  /*if(get_var_settings_setting_time_checked_autoset()) {
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)) {
       Serial.println("Failed to obtain time");
+      set_var_settings_setting_time_checked_autoset(false);
       return;
     }
     char time[6];
@@ -136,16 +142,18 @@ void loop() {
     char seconds[3];
     strftime(seconds, 3, "%S", &timeinfo);
     set_var_main_clock_seconds((const char*)seconds);
-    char date[20];
+    char date[30];
     char month[10];
+    char day[12];
     strftime(month, 10, "%B", &timeinfo);
+    strftime(day, 8, "%A", &timeinfo);
     shortenMonthName(month);
-    snprintf(date, sizeof(date), "%d, %d %d", timeinfo.tm_wday, month, timeinfo.tm_mday);
+    snprintf(date, sizeof(date), "%s, %s %d", day, month, timeinfo.tm_mday);
     set_var_main_date((const char*)date);
   }else {
     set_var_main_clock_time(get_var_settings_setting_time_new_time());
     set_var_main_date(get_var_settings_setting_time_selected_date());
-  }
+  }*/
   handleLVGL();
 }
 
