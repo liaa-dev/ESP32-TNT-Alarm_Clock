@@ -12,7 +12,8 @@
 #include <FS.h>
 #include <string>
 #include <time.h>
-#include "webserver.hpp"
+#include <webserver.hpp>
+#include <SPIFFS.h>
 
 TFT_eSPI tft = TFT_eSPI(TFT_HOR_RES, TFT_VER_RES);
 
@@ -26,9 +27,9 @@ void my_touchpad_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 void lvgl_debug_print(const char * buf);
 void handleLVGL();
 void shortenMonthName(char* month);
+void connectToWiFi();
 
-const char* ssid = "DESKTOP-FF8SIT2 0448"; // TODO: read data from sd card
-const char* password = "12345678";
+String ssid, password;
 
 //TODO
 /*Notice:
@@ -111,11 +112,17 @@ void setup() {
   Serial.println("SD card initialized!");
 
   Serial.println("Initializing WiFi...");
-  WiFi.mode(WIFI_AP_STA);
-  webserver_init();
-  delay(100);
-  //WiFi.begin(ssid, password);
-  delay(100);
+  if(!SPIFFS.begin(true)){
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+  ssid = readAFile("/ssid.txt");
+  password = readAFile("/password.txt");
+  if (ssid == "" || password == "") {
+    startWebServer();
+  } else {
+    connectToWiFi();
+  }
   Serial.println("WiFi initialized!");
 
   Serial.println("Initializing and getting time");
@@ -129,7 +136,7 @@ void setup() {
 }
 
 void loop() {
-  /*if(get_var_settings_setting_time_checked_autoset()) {
+  if(get_var_settings_setting_time_checked_autoset()) {
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)) {
       Serial.println("Failed to obtain time");
@@ -150,7 +157,7 @@ void loop() {
     shortenMonthName(month);
     snprintf(date, sizeof(date), "%s, %s %d", day, month, timeinfo.tm_mday);
     set_var_main_date((const char*)date);
-  }else {
+  }/*else {
     set_var_main_clock_time(get_var_settings_setting_time_new_time());
     set_var_main_date(get_var_settings_setting_time_selected_date());
   }*/
@@ -256,15 +263,22 @@ void delete_wi_fi_table() {
   }
 }
 
-bool connectToWiFi(const char *ssid, const char *password) {
-  WiFi.begin(ssid, password);
-  delay(5000);
-  if(WiFi.status() != WL_CONNECTED) {
-    Serial.println("Could not connect to the WiFi network!");
-    return false;
+void connectToWiFi() {
+  WiFi.begin(ssid.c_str(), password.c_str());
+
+  unsigned long startAttemptTime = millis();
+
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 10000) {
+    delay(100);
   }
-  Serial.println("Successfully connected to the WiFi network!");
-  return true;
+
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("Connected to WiFi!");
+    startWebServer();
+  } else {
+    Serial.println("Failed to connect to WiFi, starting AP mode...");
+    startAPMode();
+  }
 }
 
 // Implement and register a function which can copy the rendered image to an area of your display:
